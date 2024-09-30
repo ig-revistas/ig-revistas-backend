@@ -32,12 +32,12 @@ public class UserController {
     @Autowired
     private AuthenticationManager authenticationManager;
 
-    @GetMapping("/welcome")
+    @GetMapping("/Home")
     public String welcome() {
         return "Welcome this endpoint is not secure";
     }
 
-    @PostMapping("/addNewUser")
+    @PostMapping("/Registrarse")
     public String addNewUser(@RequestBody UserInfo userInfo) {
         return service.addUser(userInfo);
     }
