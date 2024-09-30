@@ -16,12 +16,14 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
+
 import Revistas.Trabajo.filter.JwtAuthFilter;
 import Revistas.Trabajo.service.UserInfoService;
 
 @Configuration
 @EnableWebSecurity
-@EnableMethodSecurity
+@EnableMethodSecurity(securedEnabled=true)
+
 public class SecurityConfig {
 
     private final JwtAuthFilter authFilter = new JwtAuthFilter();
@@ -36,9 +38,7 @@ public class SecurityConfig {
         http
             .csrf(csrf -> csrf.disable()) // Disable CSRF for stateless APIs
             .authorizeHttpRequests(auth -> auth
-                .requestMatchers("/auth/welcome", "/auth/addNewUser", "/auth/generateToken").permitAll()
-                .requestMatchers("/auth/user/").hasAuthority("ROLE_USER")
-                .requestMatchers("/auth/admin/").hasAuthority("ROLE_ADMIN")
+                .requestMatchers("/auth/Home", "/auth/Registrarse", "/auth/generateToken").permitAll()
                 .anyRequest().authenticated() // Protect all other endpoints
             )
             .sessionManagement(sess -> sess
