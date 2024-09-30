@@ -1,5 +1,6 @@
 package Revistas.Trabajo.config;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -23,48 +24,47 @@ import Revistas.Trabajo.service.UserInfoService;
 @Configuration
 @EnableWebSecurity
 @EnableMethodSecurity(securedEnabled=true)
-
 public class SecurityConfig {
-
-    private final JwtAuthFilter authFilter = new JwtAuthFilter();
-
-    @Bean
-    public UserDetailsService userDetailsService() {
-        return new UserInfoService(); // Ensure UserInfoService implements UserDetailsService
-    }
-
-    @Bean
-    public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
-        http
-            .csrf(csrf -> csrf.disable()) // Disable CSRF for stateless APIs
-            .authorizeHttpRequests(auth -> auth
-                .requestMatchers("/auth/Home", "/auth/Registrarse", "/auth/generateToken").permitAll()
-                .anyRequest().authenticated() // Protect all other endpoints
-            )
-            .sessionManagement(sess -> sess
-                .sessionCreationPolicy(SessionCreationPolicy.STATELESS) // No sessions
-            )
-            .authenticationProvider(authenticationProvider()) // Custom authentication provider
-            .addFilterBefore(authFilter, UsernamePasswordAuthenticationFilter.class); // Add JWT filter
-
-        return http.build();
-    }
-
-    @Bean
-    public PasswordEncoder passwordEncoder() {
-        return new BCryptPasswordEncoder(); // Password encoding
-    }
-
-    @Bean
-    public AuthenticationProvider authenticationProvider() {
-        DaoAuthenticationProvider authenticationProvider = new DaoAuthenticationProvider();
-        authenticationProvider.setUserDetailsService(userDetailsService());
-        authenticationProvider.setPasswordEncoder(passwordEncoder());
-        return authenticationProvider;
-    }
-
-    @Bean
-    public AuthenticationManager authenticationManager(AuthenticationConfiguration config) throws Exception {
-        return config.getAuthenticationManager();
-    }
+	@Autowired
+	private JwtAuthFilter authFilter;
+	
+	@Bean
+	public UserDetailsService userDetailsService() {
+	    return new UserInfoService(); // Ensure UserInfoService implements UserDetailsService
+	}
+	
+	@Bean
+	public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
+	    http
+	        .csrf(csrf -> csrf.disable()) // Disable CSRF for stateless APIs
+	    .authorizeHttpRequests(auth -> auth
+	        .requestMatchers("/auth/Home", "/auth/Registrarse", "/auth/generateToken").permitAll()
+	        .anyRequest().authenticated() // Protect all other endpoints
+	    )
+	    .sessionManagement(sess -> sess
+	        .sessionCreationPolicy(SessionCreationPolicy.STATELESS) // No sessions
+	    )
+	    .authenticationProvider(authenticationProvider()) // Custom authentication provider
+	    .addFilterBefore(authFilter, UsernamePasswordAuthenticationFilter.class); // Add JWT filter
+	
+	    return http.build();
+	}
+	
+	@Bean
+	public PasswordEncoder passwordEncoder() {
+	    return new BCryptPasswordEncoder(); // Password encoding
+	}
+	
+	@Bean
+	public AuthenticationProvider authenticationProvider() {
+	    DaoAuthenticationProvider authenticationProvider = new DaoAuthenticationProvider();
+	    authenticationProvider.setUserDetailsService(userDetailsService());
+	    authenticationProvider.setPasswordEncoder(passwordEncoder());
+	    return authenticationProvider;
+	}
+	
+	@Bean
+	public AuthenticationManager authenticationManager(AuthenticationConfiguration config) throws Exception {
+	    return config.getAuthenticationManager();
+	}
 }
