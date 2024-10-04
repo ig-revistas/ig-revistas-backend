@@ -4,10 +4,12 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.Index;
 import jakarta.persistence.Table;
 
 @Entity
-@Table(name="UserInfo", schema = "revistas")
+@Table(name = "UserInfo", schema = "revistas", indexes = {
+		@Index(name = "index_userInfo_email", columnList = "email", unique = true) })
 public class UserInfo {
 
     @Id
