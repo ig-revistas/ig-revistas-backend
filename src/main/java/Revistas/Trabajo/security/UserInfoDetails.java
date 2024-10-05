@@ -14,17 +14,16 @@ public class UserInfoDetails implements UserDetails {
 
     private static final long serialVersionUID = 1L;
     
-	private String username; // Changed from 'name' to 'username' for clarity
+	private String username;
     private String password;
     private List<GrantedAuthority> authorities;
 
     public UserInfoDetails(UserInfo userInfo) {
-        this.username = userInfo.getEmail(); // Assuming 'email' is used as 'username'
+        this.username = userInfo.getEmail(); 
         this.password = userInfo.getPassword();
-        this.authorities = List.of(userInfo.getRoles().split(","))
-                .stream()
-                .map(x->x.trim())
-                .map(SimpleGrantedAuthority::new)
+        this.authorities = userInfo.getRoles()
+        		.stream()
+                .map(role -> new SimpleGrantedAuthority(role.name())) 
                 .collect(Collectors.toList());
     }
 
@@ -45,21 +44,21 @@ public class UserInfoDetails implements UserDetails {
 
     @Override
     public boolean isAccountNonExpired() {
-        return true; // Implement your logic if you need this
+        return true; 
     }
 
     @Override
     public boolean isAccountNonLocked() {
-        return true; // Implement your logic if you need this
+        return true; 
     }
 
     @Override
     public boolean isCredentialsNonExpired() {
-        return true; // Implement your logic if you need this
+        return true; 
     }
 
     @Override
     public boolean isEnabled() {
-        return true; // Implement your logic if you need this
+        return true; 
     }
 }

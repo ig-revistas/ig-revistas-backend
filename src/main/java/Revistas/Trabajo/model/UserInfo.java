@@ -1,15 +1,21 @@
 package Revistas.Trabajo.model;
 
+import java.util.List;
+
+
+import jakarta.persistence.CollectionTable;
+import jakarta.persistence.ElementCollection;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.Index;
+import jakarta.persistence.JoinColumn;
 import jakarta.persistence.Table;
-
 @Entity
 @Table(name = "UserInfo", schema = "revistas", indexes = {
-		@Index(name = "index_userInfo_email", columnList = "email", unique = true) })
+		@Index(name = "index_userInfo_email", columnList = "email", unique = true) }
+)
 public class UserInfo {
 
     @Id
@@ -18,7 +24,11 @@ public class UserInfo {
     private String name;
     private String email;
     private String password;
-    private String roles;
+    @ElementCollection(targetClass = Rol.class)
+    @CollectionTable(name = "user_roles", joinColumns = @JoinColumn(name = "user_id"))
+    private List<Rol> roles;
+    
+    
 	public int getId() {
 		return id;
 	}
@@ -43,10 +53,11 @@ public class UserInfo {
 	public void setPassword(String password) {
 		this.password = password;
 	}
-	public String getRoles() {
+	public List<Rol> getRoles() {
 		return roles;
 	}
-	public void setRoles(String roles) {
+	public void setRoles(List<Rol> roles) {
 		this.roles = roles;
 	}
+	
 }

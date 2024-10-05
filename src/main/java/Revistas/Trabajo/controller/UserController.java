@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import Revistas.Trabajo.DTO.UserInfoDto;
 import Revistas.Trabajo.model.UserInfo;
 import Revistas.Trabajo.request.AuthRequest;
 import Revistas.Trabajo.service.JwtService;
@@ -38,7 +39,8 @@ public class UserController {
     }
 
     @PostMapping("/Registrarse")
-    public String addNewUser(@RequestBody UserInfo userInfo) {
+    public String addNewUser(@RequestBody UserInfoDto userInfoDto) {
+    	UserInfo userInfo= new UserInfo();
         return service.addUser(userInfo);
     }
 
