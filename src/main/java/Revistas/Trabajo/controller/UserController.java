@@ -1,6 +1,7 @@
 package Revistas.Trabajo.controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -39,9 +40,20 @@ public class UserController {
     }
 
     @PostMapping("/Registrarse")
-    public String addNewUser(@RequestBody UserInfoDto userInfoDto) {
-    	UserInfo userInfo= new UserInfo();
-        return service.addUser(userInfo);
+    public ResponseEntity<?> registerUser(@RequestBody UserInfoDto userDto) {
+        if (userDto.getPassword() == null || userDto.getPassword().isEmpty()) {
+            return ResponseEntity.badRequest().body("La contraseña no puede estar vacía ni ser null");
+        }
+        
+       
+        UserInfo userInfo = new UserInfo();
+        userInfo.setNombre(userDto.getName());
+        userInfo.setEmail(userDto.getEmail());
+        userInfo.setPassword(userDto.getPassword()); 
+        userInfo.setRoles(userDto.getRoles());
+        
+        String responseMessage = service.addUser(userInfo); 
+        return ResponseEntity.ok(responseMessage);
     }
 
     @GetMapping("/user/userProfile")
