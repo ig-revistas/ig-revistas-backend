@@ -17,7 +17,6 @@ public class UserInfo {
 
     @ElementCollection(fetch = FetchType.EAGER)  
     @CollectionTable(name = "usuario_rol", joinColumns = @JoinColumn(name = "id_usuario"))
-    @Column(name = "rol")
     private Set<String> roles;
 
     public int getId_usuario() {
