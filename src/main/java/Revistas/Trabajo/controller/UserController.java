@@ -55,7 +55,8 @@ public class UserController {
         String responseMessage = service.addUser(userInfo); 
         return ResponseEntity.ok(responseMessage);
     }
-
+   
+    
     @GetMapping("/user/userProfile")
     @PreAuthorize("hasAuthority('ROLE_USER')")
     public String userProfile() {
