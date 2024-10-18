@@ -8,7 +8,7 @@ import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
-import Revistas.Trabajo.model.UserInfo;
+import Revistas.Trabajo.model.Usuario;
 
 public class UserInfoDetails implements UserDetails {
 
@@ -18,12 +18,12 @@ public class UserInfoDetails implements UserDetails {
     private String password;
     private List<GrantedAuthority> authorities;
 
-    public UserInfoDetails(UserInfo userInfo) {
+    public UserInfoDetails(Usuario userInfo) {
         this.username = userInfo.getEmail(); 
-        this.password = userInfo.getPassword();
+        this.password = userInfo.getContrasenia();
         this.authorities = userInfo.getRoles()
         		.stream()
-        		.map(role -> new SimpleGrantedAuthority(role)) 
+        		.map(role -> new SimpleGrantedAuthority(role.getNombre())) 
                 .collect(Collectors.toList());
     }
 

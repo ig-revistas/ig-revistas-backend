@@ -13,11 +13,11 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import Revistas.Trabajo.DTO.UserInfoDto;
-import Revistas.Trabajo.model.UserInfo;
+import Revistas.Trabajo.DTO.UsuarioDto;
+import Revistas.Trabajo.model.Usuario;
 import Revistas.Trabajo.request.AuthRequest;
 import Revistas.Trabajo.service.JwtService;
-import Revistas.Trabajo.service.UserInfoService;
+import Revistas.Trabajo.service.UsuarioService;
 
 
 
@@ -26,7 +26,7 @@ import Revistas.Trabajo.service.UserInfoService;
 public class UserController {
 
     @Autowired
-    private UserInfoService service;
+    private UsuarioService service;
 
     @Autowired
     private JwtService jwtService;
@@ -40,18 +40,17 @@ public class UserController {
     }
 
     @PostMapping("/Registrarse")
-    public ResponseEntity<?> registerUser(@RequestBody UserInfoDto userDto) {
+    public ResponseEntity<?> registerUser(@RequestBody UsuarioDto userDto) {
         if (userDto.getPassword() == null || userDto.getPassword().isEmpty()) {
             return ResponseEntity.badRequest().body("La contraseña no puede estar vacía ni ser null");
         }
         
        
-        UserInfo userInfo = new UserInfo();
+        Usuario userInfo = new Usuario();
         userInfo.setNombre(userDto.getName());
         userInfo.setEmail(userDto.getEmail());
-        userInfo.setPassword(userDto.getPassword()); 
-        userInfo.setRoles(userDto.getRoles());
-        
+        userInfo.setContrasenia(userDto.getPassword()); 
+       
         String responseMessage = service.addUser(userInfo); 
         return ResponseEntity.ok(responseMessage);
     }

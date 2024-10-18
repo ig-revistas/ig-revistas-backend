@@ -11,14 +11,14 @@ import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
-@RequestMapping("/revistas")
+@RequestMapping("/auth")
 public class RevistaController {
 
     @Autowired
     private RevistaService revistaService;
 
-    @PostMapping()
-    // @PreAuthorize("hasAuthority('ADMIN_ROLE')")
+    @PostMapping("/CrearRevista")
+    @PreAuthorize("hasAuthority('ADMIN_ROLE')")
     public ResponseEntity<?> crearRevista(@Validated @RequestBody RevistaDto nuevaRevistaDto) {
         try {
             Revista nuevaRevista = nuevaRevistaDto.toEntity(); 
