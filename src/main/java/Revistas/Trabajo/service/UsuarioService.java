@@ -13,15 +13,15 @@ import org.springframework.stereotype.Service;
 
 import Revistas.Trabajo.model.Usuario;
 import Revistas.Trabajo.model.Rol;
-import Revistas.Trabajo.repository.UsuarioRepositoty;
+import Revistas.Trabajo.repository.UsuarioRepositoy;
 import Revistas.Trabajo.repository.RolRepository;
 import Revistas.Trabajo.security.UserInfoDetails;
 
 @Service
-public class UsuarioService implements UserDetailsService {
+public class UsuarioService<repository> implements UserDetailsService {
 
     @Autowired
-    private UsuarioRepositoty repository;
+    private UsuarioRepositoy repository;
 
     @Autowired
     private RolRepository rolRepository;  

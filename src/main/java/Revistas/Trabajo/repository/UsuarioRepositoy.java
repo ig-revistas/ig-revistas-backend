@@ -8,7 +8,7 @@ import org.springframework.stereotype.Repository;
 import Revistas.Trabajo.model.Usuario;
 
 @Repository
-public interface UsuarioRepositoty extends JpaRepository<Usuario, String> {
+public interface UsuarioRepositoy extends JpaRepository<Usuario, String> {
 
 	Optional<Usuario> findByEmail(String email); 
 	
