@@ -14,17 +14,24 @@ public class UserInfoDetails implements UserDetails {
 
     private static final long serialVersionUID = 1L;
     
-	private String username;
+    private Usuario usuario; 
+    private String username;
     private String password;
     private List<GrantedAuthority> authorities;
 
     public UserInfoDetails(Usuario userInfo) {
+        this.usuario = userInfo; 
         this.username = userInfo.getEmail(); 
         this.password = userInfo.getContrasenia();
         this.authorities = userInfo.getRoles()
-        		.stream()
-        		.map(role -> new SimpleGrantedAuthority(role.getNombre())) 
+                .stream()
+                .map(role -> new SimpleGrantedAuthority(role.getNombre())) 
                 .collect(Collectors.toList());
+    }
+
+   
+    public Usuario getUsuario() {
+        return this.usuario;
     }
 
     @Override

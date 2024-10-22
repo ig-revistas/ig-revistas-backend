@@ -16,9 +16,9 @@
 	import Revistas.Trabajo.DTO.UserAuthDto;
 	import Revistas.Trabajo.DTO.UsuarioDto;
 	import Revistas.Trabajo.model.Usuario;
-	import Revistas.Trabajo.repository.UsuarioRepositoy;
 	import Revistas.Trabajo.request.AuthRequest;
-	import Revistas.Trabajo.service.JwtService;
+import Revistas.Trabajo.security.UserInfoDetails;
+import Revistas.Trabajo.service.JwtService;
 	import Revistas.Trabajo.service.UsuarioService;
 	
 	
@@ -27,17 +27,18 @@
 	@RequestMapping("/auth")
 	public class UserController {
 	
-	    @Autowired
-	    private UsuarioService<?> service;
+		@Autowired
+	    private UsuarioService service;
 	
 	    @Autowired
 	    private JwtService jwtService;
 	
 	    @Autowired
 	    private AuthenticationManager authenticationManager;
+
+
+      
 	    
-	    @Autowired
-	    private UsuarioRepositoy usuarioRepository;
 	
 	    @GetMapping("/Home")
 	    public String welcome() {
@@ -73,6 +74,7 @@
 	        return "Welcome to Admin Profile";
 	    }
 	    
+	 
 	    @PostMapping("/generateToken")
 	    public UserAuthDto authenticateAndGetToken(@RequestBody AuthRequest authRequest) {
 	        Authentication authentication = authenticationManager.authenticate(
@@ -82,8 +84,9 @@
 	        if (authentication.isAuthenticated()) {
 	            String token = jwtService.generateToken(authRequest.getUsername());
 
-	            Usuario usuario = usuarioRepository.findByEmail(authRequest.getUsername())
-	                              .orElseThrow(() -> new UsernameNotFoundException("Usuario no encontrado"));
+	            UserInfoDetails userInfoDetails = (UserInfoDetails) service.loadUserByUsername(authRequest.getUsername());
+	            
+	            Usuario usuario = userInfoDetails.getUsuario();
 
 	            UsuarioDto usuarioDto = new UsuarioDto(usuario);
 	            usuarioDto.setPassword(null);
@@ -93,5 +96,4 @@
 	            throw new UsernameNotFoundException("Invalid user request!");
 	        }
 	    }
-
 }

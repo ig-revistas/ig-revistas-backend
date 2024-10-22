@@ -18,7 +18,7 @@ import Revistas.Trabajo.repository.RolRepository;
 import Revistas.Trabajo.security.UserInfoDetails;
 
 @Service
-public class UsuarioService<repository> implements UserDetailsService {
+public class UsuarioService implements UserDetailsService {
 
     @Autowired
     private UsuarioRepositoy repository;
@@ -31,7 +31,7 @@ public class UsuarioService<repository> implements UserDetailsService {
 
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-        Optional<Usuario> userDetail = repository.findByEmail(username); 
+        Optional<Usuario> userDetail = repository.findByEmail(username);
 
         return userDetail.map(UserInfoDetails::new)
                 .orElseThrow(() -> new UsernameNotFoundException("User not found: " + username));
