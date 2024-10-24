@@ -21,7 +21,7 @@ import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 import org.springframework.web.cors.CorsConfigurationSource;
 
 import Revistas.Trabajo.filter.JwtAuthFilter;
-import Revistas.Trabajo.service.UserInfoService;
+import Revistas.Trabajo.service.UsuarioService;
 
 @Configuration
 @EnableWebSecurity
@@ -32,7 +32,7 @@ public class SecurityConfig {
 
 	@Bean
 	public UserDetailsService userDetailsService() {
-		return new UserInfoService();
+		return new UsuarioService();
 	}
 
 	@Bean

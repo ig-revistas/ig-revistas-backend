@@ -8,23 +8,30 @@ import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
-import Revistas.Trabajo.model.UserInfo;
+import Revistas.Trabajo.model.Usuario;
 
 public class UserInfoDetails implements UserDetails {
 
     private static final long serialVersionUID = 1L;
     
-	private String username;
+    private Usuario usuario; 
+    private String username;
     private String password;
     private List<GrantedAuthority> authorities;
 
-    public UserInfoDetails(UserInfo userInfo) {
+    public UserInfoDetails(Usuario userInfo) {
+        this.usuario = userInfo; 
         this.username = userInfo.getEmail(); 
-        this.password = userInfo.getPassword();
+        this.password = userInfo.getContrasenia();
         this.authorities = userInfo.getRoles()
-        		.stream()
-        		.map(role -> new SimpleGrantedAuthority(role)) 
+                .stream()
+                .map(role -> new SimpleGrantedAuthority(role.getNombre())) 
                 .collect(Collectors.toList());
+    }
+
+   
+    public Usuario getUsuario() {
+        return this.usuario;
     }
 
     @Override

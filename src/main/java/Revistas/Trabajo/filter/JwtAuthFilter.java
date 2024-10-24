@@ -10,7 +10,7 @@ import org.springframework.security.web.authentication.WebAuthenticationDetailsS
 import org.springframework.stereotype.Component;
 import org.springframework.web.filter.OncePerRequestFilter;
 import Revistas.Trabajo.service.JwtService;
-import Revistas.Trabajo.service.UserInfoService;
+import Revistas.Trabajo.service.UsuarioService;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
@@ -23,7 +23,7 @@ public class JwtAuthFilter extends OncePerRequestFilter {
 	private JwtService jwtService;
 
 	@Autowired
-	private UserInfoService userDetailsService;
+	private UsuarioService userDetailsService;
 
 	@Override
 	protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain)
