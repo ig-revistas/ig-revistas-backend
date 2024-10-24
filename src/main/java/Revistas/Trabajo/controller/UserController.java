@@ -82,11 +82,13 @@ import Revistas.Trabajo.service.JwtService;
 	        );
 	        
 	        if (authentication.isAuthenticated()) {
+	        	Usuario usuario = ((UserInfoDetails)authentication.getPrincipal()).getUsuario();
+	        	
 	            String token = jwtService.generateToken(authRequest.getUsername());
 
-	            UserInfoDetails userInfoDetails = (UserInfoDetails) service.loadUserByUsername(authRequest.getUsername());
-	            
-	            Usuario usuario = userInfoDetails.getUsuario();
+//	            UserInfoDetails userInfoDetails = (UserInfoDetails) service.loadUserByUsername(authRequest.getUsername());
+//	            
+//	            Usuario usuario = userInfoDetails.getUsuario();
 
 	            UsuarioDto usuarioDto = new UsuarioDto(usuario);
 	            usuarioDto.setPassword(null);

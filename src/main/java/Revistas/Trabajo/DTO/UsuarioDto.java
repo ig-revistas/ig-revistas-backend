@@ -2,6 +2,7 @@ package Revistas.Trabajo.DTO;
 
 import java.io.Serializable;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 import Revistas.Trabajo.model.Usuario;
 
@@ -20,8 +21,11 @@ public class UsuarioDto implements Serializable {
     public UsuarioDto(Usuario user) {
         this.name = user.getNombre();
         this.email = user.getEmail();
-        this.password = user.getContrasenia();  
-    }
+        this.password = user.getContrasenia(); 
+        this.roles = user.getRoles().stream()
+        					.map(rol -> rol.getNombre())
+        					.collect(Collectors.toSet());
+        }
 
     public Set<String> getRoles() {  
         return roles;
