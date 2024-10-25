@@ -2,10 +2,11 @@ package Revistas.Trabajo.DTO;
 
 import java.io.Serializable;
 import java.util.Set;
+import java.util.stream.Collectors;
 
-import Revistas.Trabajo.model.UserInfo;
+import Revistas.Trabajo.model.Usuario;
 
-public class UserInfoDto implements Serializable {
+public class UsuarioDto implements Serializable {
 
     private static final long serialVersionUID = 1L;
 
@@ -14,15 +15,17 @@ public class UserInfoDto implements Serializable {
     private String password;
     private Set<String> roles; 
 
-    public UserInfoDto() {
+    public UsuarioDto() {
     }
 
-    public UserInfoDto(UserInfo user) {
+    public UsuarioDto(Usuario user) {
         this.name = user.getNombre();
         this.email = user.getEmail();
-        this.password = user.getPassword();
-        this.roles = user.getRoles();  
-    }
+        this.password = user.getContrasenia(); 
+        this.roles = user.getRoles().stream()
+        					.map(rol -> rol.getNombre())
+        					.collect(Collectors.toSet());
+        }
 
     public Set<String> getRoles() {  
         return roles;
