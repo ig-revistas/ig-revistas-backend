@@ -1,11 +1,11 @@
 package Revistas.Trabajo.model;
 
+import java.time.LocalDate;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.Table;
-import java.time.LocalDate;
 
 @Entity
 @Table(name = "Revista", schema = "revistas")
@@ -14,7 +14,6 @@ public class Revista {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
-
     private String titulo;
     private String autor;
     private LocalDate fechaPublicacion;
@@ -23,7 +22,7 @@ public class Revista {
     private String estado;
     private int cantidadDisponible;
     private String descripcion;
-
+    private String portadaUrl;
 
     public int getId() {
         return id;
@@ -95,5 +94,13 @@ public class Revista {
 
     public void setDescripcion(String descripcion) {
         this.descripcion = descripcion;
+    }
+
+    public String getPortadaUrl() {
+        return portadaUrl;
+    }
+
+    public void setPortadaUrl(String portadaUrl) {
+        this.portadaUrl = portadaUrl;
     }
 }
