@@ -24,7 +24,7 @@ public class RevistaController {
     @Autowired
     private RevistaService revistaService;
 
-    private static final String UPLOAD_DIR = "." + System.getProperty("file.separator") + "uploads" + System.getProperty("file.separator");
+    private static final String UPLOAD_DIR = "./uploads/";
 
     @PostMapping(value = "", consumes = {"multipart/form-data"})
     @PreAuthorize("hasAuthority('ADMIN_ROLE')")
@@ -32,12 +32,19 @@ public class RevistaController {
             @Validated @RequestPart("revista") RevistaDto nuevaRevistaDto,
             @RequestPart("portada") MultipartFile portada) {
         try {
-            Path path = Paths.get(UPLOAD_DIR + portada.getOriginalFilename());
+            String originalFilename = portada.getOriginalFilename();
+
+            
+            if (originalFilename.contains("//")) {
+                return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Nombre de archivo no válido.");
+            }
+
+            Path path = Paths.get(UPLOAD_DIR + originalFilename);
             Files.createDirectories(path.getParent());
             Files.write(path, portada.getBytes());
 
             Revista nuevaRevista = nuevaRevistaDto.toEntity();
-            nuevaRevista.setPortadaUrl("/revistas/files/" + portada.getOriginalFilename());
+            nuevaRevista.setPortadaUrl("/uploads/" + originalFilename);
 
             Revista revistaCreada = revistaService.crearRevista(nuevaRevista);
             return ResponseEntity.status(HttpStatus.CREATED).body(revistaCreada);
@@ -50,6 +57,8 @@ public class RevistaController {
 
     @GetMapping()
     public ResponseEntity<List<Revista>> getRevistas() {
+        String currentDir = System.getProperty("user.dir");
+        System.out.println("Directorio actual de ejecución: " + currentDir);
         try {
             List<Revista> revistas = revistaService.obtenerTodasLasRevistas();
             return ResponseEntity.ok(revistas);
@@ -58,7 +67,7 @@ public class RevistaController {
         }
     }
 
-    @GetMapping("/files/{filename:.+}")
+    @GetMapping("/uploads/{filename:.+}")
     public ResponseEntity<byte[]> getImage(@PathVariable String filename) {
         try {
             Path path = Paths.get(UPLOAD_DIR + filename);

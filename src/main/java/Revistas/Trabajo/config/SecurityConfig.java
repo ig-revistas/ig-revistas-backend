@@ -41,19 +41,15 @@ public class SecurityConfig {
         http.csrf(csrf -> csrf.disable())
             .cors(cors -> cors.configurationSource(corsConfigurationSource()))
             .authorizeHttpRequests(auth -> auth
-                .requestMatchers(
-                    "/auth/Home", 
-                    "/auth/verificarPermisosEscritura", 
-                    "/auth/Registrarse", 
-                    "/auth/generateToken", 
-                    "/auth/addNewUser", 
-                    "/auth/revistas",              
-                    "/auth/uploads/**",
-                    "/auth/CrearRevista"
-                ).permitAll()
-      //          .requestMatchers("/auth/CrearRevista").hasAuthority("ADMIN_ROLE")
-                .anyRequest().authenticated()
-            )
+            	    .requestMatchers(
+            	        "/home", 
+            	        "/registrarse", 
+            	        "/generate-token", 
+            	        "/revistas/uploads/**"
+            	    ).permitAll()
+            	    .anyRequest().authenticated()
+            	)
+
             .sessionManagement(sess -> sess.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
             .authenticationProvider(authenticationProvider())
             .addFilterBefore(authFilter, UsernamePasswordAuthenticationFilter.class);
@@ -93,4 +89,3 @@ public class SecurityConfig {
         return config.getAuthenticationManager();
     }
 }
-
