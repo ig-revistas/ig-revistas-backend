@@ -18,16 +18,16 @@ import java.nio.file.Paths;
 import java.util.List;
 
 @RestController
-@RequestMapping("/auth")
+@RequestMapping("/revistas")
 public class RevistaController {
 
     @Autowired
     private RevistaService revistaService;
 
-    private static final String UPLOAD_DIR = "C:\\Users\\54224\\OneDrive\\Escritorio\\practicandoJava\\Persistencia\\Trabajo\\uploads\\";
+    private static final String UPLOAD_DIR = "." + System.getProperty("file.separator") + "uploads" + System.getProperty("file.separator");
 
-    @PostMapping(value = "/CrearRevista", consumes = {"multipart/form-data"})
-   // @PreAuthorize("hasAuthority('ADMIN_ROLE')")
+    @PostMapping(value = "", consumes = {"multipart/form-data"})
+    @PreAuthorize("hasAuthority('ADMIN_ROLE')")
     public ResponseEntity<?> crearRevista(
             @Validated @RequestPart("revista") RevistaDto nuevaRevistaDto,
             @RequestPart("portada") MultipartFile portada) {
@@ -37,7 +37,7 @@ public class RevistaController {
             Files.write(path, portada.getBytes());
 
             Revista nuevaRevista = nuevaRevistaDto.toEntity();
-            nuevaRevista.setPortadaUrl("/uploads/" + portada.getOriginalFilename());
+            nuevaRevista.setPortadaUrl("/revistas/files/" + portada.getOriginalFilename());
 
             Revista revistaCreada = revistaService.crearRevista(nuevaRevista);
             return ResponseEntity.status(HttpStatus.CREATED).body(revistaCreada);
@@ -48,7 +48,7 @@ public class RevistaController {
         }
     }
 
-    @GetMapping("/revistas")
+    @GetMapping()
     public ResponseEntity<List<Revista>> getRevistas() {
         try {
             List<Revista> revistas = revistaService.obtenerTodasLasRevistas();
@@ -58,16 +58,19 @@ public class RevistaController {
         }
     }
 
-    @GetMapping("/uploads/{filename:.+}")
+    @GetMapping("/files/{filename:.+}")
     public ResponseEntity<byte[]> getImage(@PathVariable String filename) {
         try {
             Path path = Paths.get(UPLOAD_DIR + filename);
+            if (!Files.exists(path)) {
+                return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);
+            }
             byte[] data = Files.readAllBytes(path);
             return ResponseEntity.ok()
-                    .header("Content-Type", "image/jpeg") 
+                    .header("Content-Type", "image/jpeg")
                     .body(data);
         } catch (IOException e) {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(null);
         }
     }
 }
