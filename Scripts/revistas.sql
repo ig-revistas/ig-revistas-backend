@@ -2,11 +2,12 @@ USE revistas;
 
 
 
+
 -- Eliminar tablas existentes (en orden para evitar conflictos con claves foráneas)
 DROP TABLE IF EXISTS Usuario_Rol;
 DROP TABLE IF EXISTS Reserva;
 DROP TABLE IF EXISTS usuario;
-DROP TABLE IF EXISTS Revista;
+DROP TABLE IF EXISTS revistas.revista;
 DROP TABLE IF EXISTS rol;
 
 -- Crear tablas de nuevo
@@ -29,13 +30,14 @@ CREATE TABLE Revista (
     editorial VARCHAR(100),
     estado ENUM('DISPONIBLE', 'PRESTADA', 'RESERVADA', 'DEVUELTA') NOT NULL,
     cantidad_disponible INT NOT NULL,
-    descripcion TEXT
+    descripcion TEXT,
+    portada_url VARCHAR(255)
 );
 
 -- Tabla de reservas (relación muchos a muchos entre usuarios y revistas)
 CREATE TABLE Reserva (
     id INT AUTO_INCREMENT PRIMARY KEY,
-    id_revista INT,
+    id_revista int,
     id_usuario CHAR(36),  
     FOREIGN KEY (id_revista) REFERENCES Revista(id),
     FOREIGN KEY (id_usuario) REFERENCES usuario(id)
@@ -58,21 +60,34 @@ CREATE TABLE Usuario_Rol (
 -- Consultas adicionales
 SELECT * FROM revistas.Usuario_Rol;
 
--- Insertar roles
-INSERT INTO revistas.rol(nombre) VALUES ('ADMIN_ROLE');
-INSERT INTO revistas.rol(nombre) VALUES ('USER_ROLE');
 
 -- Asignar rol de administrador al usuario con correo 'akopach05@gmail.com'
 -- solo es necesario cambiar el email si deseas otro usuario
 INSERT INTO revistas.Usuario_Rol (id_usuario, id_rol) 
-VALUES ((SELECT id_usuario FROM revistas.usuario WHERE email = 'akopach05@gmail.com'),
-        (SELECT id FROM revistas.rol WHERE nombre = 'ADMIN_ROLE'));
+VALUES (
+    (SELECT id FROM revistas.usuario WHERE email = 'Akopach05@gmail.com'),
+    (SELECT id FROM revistas.rol WHERE nombre = 'ADMIN_ROLE')
+);
 
 -- Consultar las revistas
 SELECT * FROM revistas.Revista;
 select * from revistas.usuario_rol ur ;
 select * from revistas.rol r ;
+select * from usuario;
 
 update  revistas.rol set nombre = 'hola';
+
+
+INSERT INTO revistas.rol(id, nombre) VALUES (UUID(),'ADMIN_ROLE');
+
+-- alter table revistas.revista MODIFY id UUID;
+
+select * from revistas.revista;
+delete from revistas.revista;
+
+
+-- agrego la tabla para las portadas 
+ALTER TABLE Revista 
+ADD COLUMN portada_url VARCHAR(255);
 
 
