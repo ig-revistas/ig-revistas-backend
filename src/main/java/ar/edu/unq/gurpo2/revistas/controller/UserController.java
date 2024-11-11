@@ -62,9 +62,13 @@ public class UserController {
         userInfo.setEmail(userDto.getEmail());
         userInfo.setContrasenia(userDto.getPassword());
 
-        String responseMessage = usuarioService.addUser(userInfo);
-        return ResponseEntity.ok(responseMessage);
+        Usuario responseMessage = usuarioService.addUser(userInfo);  // Ahora es un String
+
+        return ResponseEntity.ok(responseMessage);  // Devuelves el mensaje
     }
+
+
+
 
     @GetMapping("/perfil")
     @PreAuthorize("hasAuthority('ROLE_USER')")

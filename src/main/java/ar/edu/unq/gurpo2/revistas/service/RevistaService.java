@@ -4,6 +4,7 @@ import ar.edu.unq.gurpo2.revistas.model.Revista;
 import ar.edu.unq.gurpo2.revistas.repository.RevistaRepository;
 
 import java.util.List;
+import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -21,6 +22,17 @@ public class RevistaService {
 	public List<Revista> obtenerTodasLasRevistas() {
 		return revistaRepository.findAll(); 
     }
-		
+	public Optional<Revista> obtenerRevistaPorId(Integer id) {
+        return revistaRepository.findById(id);
+    }
+
+    public Revista guardarRevista(Revista revista) {
+        return revistaRepository.save(revista);
+    }
+	
+    public void eliminarRevistaPorId(Integer id) {
+        revistaRepository.deleteById(id);
+    }
+
 }
 

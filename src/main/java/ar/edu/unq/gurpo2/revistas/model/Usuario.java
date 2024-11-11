@@ -9,7 +9,7 @@ import jakarta.persistence.Table;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.Column;  
 
-import java.util.List;
+import java.util.Set;
 
 @Entity
 @Table(name = "Usuario", schema = "revistas")
@@ -24,11 +24,13 @@ public class Usuario {
     
     @ManyToMany(fetch = FetchType.LAZY)
     @JoinTable(
-        name = "Usuario_Rol", 
-        joinColumns = @JoinColumn(name = "id_usuario"), 
+        name = "Usuario_Rol",
+        joinColumns = @JoinColumn(name = "id_usuario"),
         inverseJoinColumns = @JoinColumn(name = "id_rol")
     )
-    private List<Rol> roles;
+    private Set<Rol> roles;
+
+    public Usuario() {}
 
     @Column(name = "portada_url")
     private String portadaUrl;
@@ -41,12 +43,12 @@ public class Usuario {
         this.portadaUrl = portadaUrl;
     }
 
-    public String getId() {
+    public Long getId() {
         return id;
     }
 
-    public void setId(String id) {
-        this.id = id;
+    public void setId(Long idUsuario) {
+        this.id = idUsuario;
     }
 
     public String getNombre() {
@@ -73,11 +75,11 @@ public class Usuario {
         this.contrasenia = contrasenia;
     }
 
-    public List<Rol> getRoles() {
+    public Set<Rol> getRoles() {
         return roles;
     }
 
-    public void setRoles(List<Rol> roles) {
+    public void setRoles(Set<Rol> roles) {
         this.roles = roles;
     }
 }

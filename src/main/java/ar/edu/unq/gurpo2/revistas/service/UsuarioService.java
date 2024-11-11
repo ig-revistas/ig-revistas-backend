@@ -2,7 +2,7 @@ package ar.edu.unq.gurpo2.revistas.service;
 
 import java.util.Optional;
 import java.util.UUID;
-import java.util.List;
+import java.util.HashSet;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -14,17 +14,19 @@ import org.springframework.stereotype.Service;
 import ar.edu.unq.gurpo2.revistas.model.Rol;
 import ar.edu.unq.gurpo2.revistas.model.Usuario;
 import ar.edu.unq.gurpo2.revistas.repository.RolRepository;
-import ar.edu.unq.gurpo2.revistas.repository.UsuarioRepositoy;
+import ar.edu.unq.gurpo2.revistas.repository.UsuarioRepository;
 import ar.edu.unq.gurpo2.revistas.security.UserInfoDetails;
 
 @Service
 public class UsuarioService implements UserDetailsService {
 
+    @Autowired
+    private UsuarioRepository repository;
 	@Autowired
     private UsuarioRepositoy repository;
 
     @Autowired
-    private RolRepository rolRepository;  
+    private RolRepository rolRepository;
 
     @Autowired
     private PasswordEncoder encoder;
@@ -32,7 +34,6 @@ public class UsuarioService implements UserDetailsService {
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
         Optional<Usuario> userDetail = repository.findByEmail(username);
-
         return userDetail.map(UserInfoDetails::new)
                 .orElseThrow(() -> new UsernameNotFoundException("User not found: " + username));
     }
@@ -45,7 +46,7 @@ public class UsuarioService implements UserDetailsService {
         Optional<Rol> rolOpt = rolRepository.findByNombre("USER_ROLE");
         Rol rol = rolOpt.orElseGet(() -> {
             Rol newRol = new Rol();
-            newRol.setId(UUID.randomUUID().toString());
+            newRol.setId(UUID.randomUUID().toString());  // Aquí puedes seguir usando UUID si quieres
             newRol.setNombre("USER_ROLE");
             rolRepository.save(newRol);
             return newRol;
@@ -53,8 +54,8 @@ public class UsuarioService implements UserDetailsService {
 
         userInfo.setRoles(List.of(rol));
         repository.save(userInfo);
-        
-        return "User Added Successfully";
+
+        return userInfo;  // Retorna el usuario creado
     }
 
     public Usuario obtenerUsuarioPorId(String usuarioId) {
