@@ -13,7 +13,8 @@ public class UsuarioDto implements Serializable {
     private String name;
     private String email;
     private String password;
-    private Set<String> roles; 
+    private Set<String> roles;
+    private String portadaUrl;
 
     public UsuarioDto() {
     }
@@ -21,21 +22,22 @@ public class UsuarioDto implements Serializable {
     public UsuarioDto(Usuario user) {
         this.name = user.getNombre();
         this.email = user.getEmail();
-        this.password = user.getContrasenia(); 
+        this.password = user.getContrasenia();
         this.roles = user.getRoles().stream()
         					.map(rol -> rol.getNombre())
         					.collect(Collectors.toSet());
-        }
+        this.portadaUrl = user.getPortadaUrl();
+    }
 
-    public Set<String> getRoles() {  
+    public Set<String> getRoles() {
         return roles;
     }
 
-    public void setRoles(Set<String> roles) { 
+    public void setRoles(Set<String> roles) {
         this.roles = roles;
     }
 
-    public String getName() { 
+    public String getName() {
         return name;
     }
 
@@ -57,5 +59,13 @@ public class UsuarioDto implements Serializable {
 
     public void setPassword(String password) {
         this.password = password;
+    }
+
+    public String getPortadaUrl() {
+        return portadaUrl;
+    }
+
+    public void setPortadaUrl(String portadaUrl) {
+        this.portadaUrl = portadaUrl;
     }
 }

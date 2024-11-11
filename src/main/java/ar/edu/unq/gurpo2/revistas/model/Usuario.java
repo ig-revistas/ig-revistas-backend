@@ -7,24 +7,39 @@ import jakarta.persistence.JoinTable;
 import jakarta.persistence.ManyToMany;
 import jakarta.persistence.Table;
 import jakarta.persistence.JoinColumn;
+import jakarta.persistence.Column;  
+
 import java.util.List;
 
 @Entity
 @Table(name = "Usuario", schema = "revistas")
 public class Usuario {
+
     @Id
     private String id;
+    
     private String nombre;
     private String email;
     private String contrasenia;
-
+    
     @ManyToMany(fetch = FetchType.LAZY)
     @JoinTable(
         name = "Usuario_Rol", 
         joinColumns = @JoinColumn(name = "id_usuario"), 
         inverseJoinColumns = @JoinColumn(name = "id_rol")
     )
-    private List<Rol> roles; 
+    private List<Rol> roles;
+
+    @Column(name = "portada_url")
+    private String portadaUrl;
+
+    public String getPortadaUrl() {
+        return portadaUrl;
+    }
+
+    public void setPortadaUrl(String portadaUrl) {
+        this.portadaUrl = portadaUrl;
+    }
 
     public String getId() {
         return id;

@@ -44,7 +44,9 @@ public class SecurityConfig {
             	    .requestMatchers(
             	        "/home", 
             	        "/registrarse", 
-            	        "/generate-token", 
+            	        "/revistas",
+            	        "/login",
+            	        "/uploads/**",
             	        "/revistas/uploads/**"
             	    ).permitAll()
             	    .anyRequest().authenticated()

@@ -53,7 +53,7 @@ public class RevistaController {
     @GetMapping()
     public ResponseEntity<List<Revista>> getRevistas() {
         String currentDir = System.getProperty("user.dir");
-        System.out.println("Directorio actual de ejecución: " + currentDir);
+        System.out.println("Directorio actual de ejecuciÃ³n: " + currentDir);
         try {
             List<Revista> revistas = revistaService.obtenerTodasLasRevistas();
             return ResponseEntity.ok(revistas);

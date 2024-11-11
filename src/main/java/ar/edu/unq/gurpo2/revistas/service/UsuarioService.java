@@ -20,7 +20,7 @@ import ar.edu.unq.gurpo2.revistas.security.UserInfoDetails;
 @Service
 public class UsuarioService implements UserDetailsService {
 
-    @Autowired
+	@Autowired
     private UsuarioRepositoy repository;
 
     @Autowired
@@ -40,11 +40,9 @@ public class UsuarioService implements UserDetailsService {
     public String addUser(Usuario userInfo) {
         String idUsuario = UUID.randomUUID().toString();  
         userInfo.setId(idUsuario);  
-
-        
         userInfo.setContrasenia(encoder.encode(userInfo.getContrasenia()));
 
-       Optional <Rol> rolOpt = rolRepository.findByNombre("USER_ROLE");
+        Optional<Rol> rolOpt = rolRepository.findByNombre("USER_ROLE");
         Rol rol = rolOpt.orElseGet(() -> {
             Rol newRol = new Rol();
             newRol.setId(UUID.randomUUID().toString());
@@ -53,13 +51,25 @@ public class UsuarioService implements UserDetailsService {
             return newRol;
         });
 
-      
         userInfo.setRoles(List.of(rol));
-
-      
         repository.save(userInfo);
         
         return "User Added Successfully";
     }
-}
 
+    public Usuario obtenerUsuarioPorId(String usuarioId) {
+        return repository.findById(usuarioId).orElse(null);
+    }
+
+    public void actualizarUsuario(Usuario usuario) {
+        repository.save(usuario);
+    }
+
+    public void actualizarPortada(String usuarioId, String portadaUrl) {
+        Usuario usuario = obtenerUsuarioPorId(usuarioId);
+        if (usuario != null) {
+            usuario.setPortadaUrl(portadaUrl);
+            actualizarUsuario(usuario);
+        }
+    }
+}
