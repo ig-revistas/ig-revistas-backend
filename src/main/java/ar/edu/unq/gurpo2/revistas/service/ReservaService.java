@@ -1,10 +1,10 @@
 package ar.edu.unq.gurpo2.revistas.service;
 
 import java.time.LocalDate;
+import java.util.List;
 import java.util.UUID;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 
@@ -52,6 +52,12 @@ public class ReservaService {
 		
         return "Reserva rechazada exitosamente.";
 	}
+	@Transactional
+	public List<Reserva> getAllReserva() {
+	    return this.reservaRepository.findAll();
+	}
+
+	
 }
 
 

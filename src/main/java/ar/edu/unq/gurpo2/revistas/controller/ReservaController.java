@@ -1,7 +1,9 @@
 package ar.edu.unq.gurpo2.revistas.controller;
 
 import java.time.LocalDate;
+import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -22,6 +24,7 @@ import jakarta.transaction.Transactional;
 
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 
@@ -116,4 +119,13 @@ public class ReservaController {
 	        return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Reserva no encontrada.");
 	    }
 	}
+	@PreAuthorize("hasAuthority('OPERADOR_ROLE')")
+	@GetMapping("/todas")
+	public List<ReservaDto> todasLasReservas() {
+		List<Reserva> reservas=this.reservaService.getAllReserva();
+		return reservas.stream().map(reserva -> new ReservaDto(reserva)).collect(Collectors.toList());
+	}
+	
+	
+	
 }
