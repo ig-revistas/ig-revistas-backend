@@ -7,8 +7,9 @@ import jakarta.persistence.JoinTable;
 import jakarta.persistence.ManyToMany;
 import jakarta.persistence.Table;
 import jakarta.persistence.JoinColumn;
-import jakarta.persistence.Column;  
+import jakarta.persistence.Column;
 
+import java.util.List;
 import java.util.Set;
 
 @Entity
@@ -43,11 +44,11 @@ public class Usuario {
         this.portadaUrl = portadaUrl;
     }
 
-    public Long getId() {
+    public String getId() {
         return id;
     }
 
-    public void setId(Long idUsuario) {
+    public void setId(String idUsuario) {
         this.id = idUsuario;
     }
 
@@ -79,7 +80,7 @@ public class Usuario {
         return roles;
     }
 
-    public void setRoles(Set<Rol> roles) {
-        this.roles = roles;
+    public void setRoles(List<Rol> list) {
+        this.roles = (Set<Rol>) list;
     }
 }

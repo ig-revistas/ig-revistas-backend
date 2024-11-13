@@ -62,7 +62,7 @@ public class UserController {
         userInfo.setEmail(userDto.getEmail());
         userInfo.setContrasenia(userDto.getPassword());
 
-        Usuario responseMessage = usuarioService.addUser(userInfo);  // Ahora es un String
+        String responseMessage = usuarioService.addUser(userInfo);  // Ahora es un String
 
         return ResponseEntity.ok(responseMessage);  // Devuelves el mensaje
     }

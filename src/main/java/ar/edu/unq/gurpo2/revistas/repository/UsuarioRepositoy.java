@@ -9,7 +9,7 @@ import org.springframework.stereotype.Repository;
 import ar.edu.unq.gurpo2.revistas.model.Usuario;
 
 @Repository
-public interface UsuarioRepository extends JpaRepository<Usuario, String> {
+public interface UsuarioRepositoy extends JpaRepository<Usuario, String> {
     
     @EntityGraph(attributePaths = "roles")  
     Optional<Usuario> findByEmail(String email); 
