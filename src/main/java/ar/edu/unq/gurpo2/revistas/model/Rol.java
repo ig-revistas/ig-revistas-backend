@@ -10,34 +10,34 @@ import java.util.List;
 @Entity
 @Table(name = "Rol", schema = "revistas")
 public class Rol {
-    @Id
-    private String id;
-    private String nombre;
+	@Id
+	private String id;
+	private String nombre;
 
-    @ManyToMany(mappedBy = "roles", fetch = FetchType.LAZY) 
-    private List<Usuario> usuarios; 
+	@ManyToMany(mappedBy = "roles", fetch = FetchType.LAZY)
+	private List<Usuario> usuarios;
 
-    public String getId() {
-        return id;
-    }
+	public String getId() {
+		return id;
+	}
 
-    public void setId(String id) {
-        this.id = id;
-    }
+	public void setId(String id) {
+		this.id = id;
+	}
 
-    public String getNombre() {
-        return nombre;
-    }
+	public String getNombre() {
+		return nombre;
+	}
 
-    public void setNombre(String nombre) {
-        this.nombre = nombre;
-    }
+	public void setNombre(String nombre) {
+		this.nombre = nombre;
+	}
 
-    public List<Usuario> getUsuarios() {
-        return usuarios;
-    }
+	public List<Usuario> getUsuarios() {
+		return usuarios;
+	}
 
-    public void setUsuarios(List<Usuario> usuarios) {
-        this.usuarios = usuarios;
-    }
+	public void setUsuarios(List<Usuario> usuarios) {
+		this.usuarios = usuarios;
+	}
 }

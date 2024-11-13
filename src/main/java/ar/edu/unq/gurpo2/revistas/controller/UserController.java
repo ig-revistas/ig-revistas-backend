@@ -35,36 +35,36 @@ import io.jsonwebtoken.io.IOException;
 @RequestMapping()
 public class UserController {
 
-    @Autowired
-    private UsuarioService usuarioService;
+	@Autowired
+	private UsuarioService usuarioService;
 
-    @Autowired
-    private JwtService jwtService;
+	@Autowired
+	private JwtService jwtService;
 
     @Autowired
     private AuthenticationManager authenticationManager;
 
     private static final String UPLOAD_DIR = "./uploads/";
 
-    @GetMapping("/home")
-    public String welcome() {
-        return "Welcome! This endpoint is not secure.";
-    }
+	@GetMapping("/home")
+	public String welcome() {
+		return "Welcome! This endpoint is not secure.";
+	}
 
-    @PostMapping("/registrarse")
-    public ResponseEntity<?> registerUser(@RequestBody UsuarioDto userDto) {
-        if (userDto.getPassword() == null || userDto.getPassword().isEmpty()) {
-            return ResponseEntity.badRequest().body("La contraseña no puede estar vacía ni ser null");
-        }
+	@PostMapping("/registrarse")
+	public ResponseEntity<?> registerUser(@RequestBody UsuarioDto userDto) {
+		if (userDto.getPassword() == null || userDto.getPassword().isEmpty()) {
+			return ResponseEntity.badRequest().body("La contraseña no puede estar vacía ni ser null");
+		}
 
-        Usuario userInfo = new Usuario();
-        userInfo.setNombre(userDto.getName());
-        userInfo.setEmail(userDto.getEmail());
-        userInfo.setContrasenia(userDto.getPassword());
+		Usuario userInfo = new Usuario();
+		userInfo.setNombre(userDto.getName());
+		userInfo.setEmail(userDto.getEmail());
+		userInfo.setContrasenia(userDto.getPassword());
 
-        String responseMessage = usuarioService.addUser(userInfo);
-        return ResponseEntity.ok(responseMessage);
-    }
+		String responseMessage = usuarioService.addUser(userInfo);
+		return ResponseEntity.ok(responseMessage);
+	}
 
     @GetMapping("/perfil")
     @PreAuthorize("hasAuthority('ROLE_USER')")
@@ -72,16 +72,15 @@ public class UserController {
         return "Welcome to User Profile";
     }
 
-    @PostMapping("/login")
-    public ResponseEntity<?> authenticateAndGetToken(@RequestBody AuthRequest authRequest) {
-        try {
-            Authentication authentication = authenticationManager.authenticate(
-                new UsernamePasswordAuthenticationToken(authRequest.getUsername(), authRequest.getPassword())
-            );
+	@PostMapping("/login")
+	public ResponseEntity<?> authenticateAndGetToken(@RequestBody AuthRequest authRequest) {
+		try {
+			Authentication authentication = authenticationManager.authenticate(
+					new UsernamePasswordAuthenticationToken(authRequest.getUsername(), authRequest.getPassword()));
 
-            if (authentication.isAuthenticated()) {
-                Usuario usuario = ((UserInfoDetails) authentication.getPrincipal()).getUsuario();
-                String token = jwtService.generateToken(authRequest.getUsername());
+			if (authentication.isAuthenticated()) {
+				Usuario usuario = ((UserInfoDetails) authentication.getPrincipal()).getUsuario();
+				String token = jwtService.generateToken(authRequest.getUsername());
 
                 UsuarioDto usuarioDto = new UsuarioDto(usuario);
                 usuarioDto.setPassword(null);
@@ -107,7 +106,7 @@ public class UserController {
             Files.createDirectories(path.getParent());
             Files.write(path, portada.getBytes());
 
-            Usuario usuario = usuarioService.obtenerUsuarioPorId(usuarioId);
+            Usuario usuario = usuarioService.getUsuarioById(usuarioId);
             if (usuario == null) {
                 return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Usuario no encontrado");
             }
