@@ -51,8 +51,7 @@ public class ReservaController {
 		if (reservaDto.getIdRevista() == null || reservaDto.getIdUsuario() == null) {
 			return ResponseEntity.badRequest().body("Faltan datos obligatorios");
 		}
-		// talves en ves de buscarlo ´por id del usuario mejor lo busco por el mail del usario
-		// es algo que tengo que cambiar
+		
 		Usuario usuario = usuarioService.getUsuarioById(reservaDto.getIdUsuario());
 		Revista revista = revistaService.getRevistaById(reservaDto.getIdRevista());
 		synchronized (revista) {
