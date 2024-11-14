@@ -54,7 +54,7 @@ public class ReservaController {
 		
 		Usuario usuario = usuarioService.getUsuarioById(reservaDto.getIdUsuario());
 		Revista revista = revistaService.getRevistaById(reservaDto.getIdRevista());
-		synchronized (revista) {
+		
 			if (revista.getCantidadDisponible() == 0) {
 				return ResponseEntity.status(HttpStatus.CONFLICT).body("No hay revistas disponibles.");
 			}
@@ -63,7 +63,7 @@ public class ReservaController {
 				return ResponseEntity.status(HttpStatus.CONFLICT)
 						.body("Usuario " + usuario.getNombre() + " ya tiene 3 reservas actualmente.");
 			}
-		}
+		
 
 		if (reservaService.existeReserva(reservaDto.getIdUsuario(), reservaDto.getIdRevista())) {
 			return ResponseEntity.status(HttpStatus.CONFLICT)
@@ -78,8 +78,6 @@ public class ReservaController {
 		String responseMessage = this.reservaService.addReserva(newReserva);
 
 		revista.tomarUnaRevista();
-
-		this.usuarioService.addReserva(usuario, newReserva);
 		// TODO me falta agregar las notificacion a los operadores de una nueva
 		// reserva, lo que hace notificarPendiente es solo imprimir por pantalla un
 		// mensaje,

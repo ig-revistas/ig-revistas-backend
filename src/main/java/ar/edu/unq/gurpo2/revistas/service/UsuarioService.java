@@ -75,11 +75,7 @@ public class UsuarioService implements UserDetailsService {
 				.orElseThrow(() -> new EntityNotFoundException("El usuario no fue encontrado."));
 	}
 
-	@Transactional
-	public void addReserva(Usuario usuario, Reserva newReserva) {
-		usuario.getReservas().add(newReserva);
-		repository.save(usuario);
-	}
+	
 
 
 	public ArrayList<Usuario> getAllUsuariosOperador() {

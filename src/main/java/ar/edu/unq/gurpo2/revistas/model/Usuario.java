@@ -30,9 +30,13 @@ public class Usuario {
         joinColumns = @JoinColumn(name = "id_usuario"), 
         inverseJoinColumns = @JoinColumn(name = "id_rol")
     )
+    private List<Rol> roles;
 	@OneToMany(mappedBy = "usuario", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
 	private List<Reserva> reservas = new ArrayList<>();
-
+	
+	@Column(name = "portada_url")
+    private String portadaUrl;
+	
 	public List<Reserva> getReservas() {
 		return reservas;
 	}
@@ -40,8 +44,7 @@ public class Usuario {
 	public void setReservas(List<Reserva> reservas) {
 		this.reservas = reservas;
 	}
-	@Column(name = "portada_url")
-    private String portadaUrl;
+	
 
     public String getPortadaUrl() {
         return portadaUrl;
@@ -50,7 +53,7 @@ public class Usuario {
     public void setPortadaUrl(String portadaUrl) {
         this.portadaUrl = portadaUrl;
     }
-    private List<Rol> roles; 
+     
 
 	public String getId() {
 		return id;
