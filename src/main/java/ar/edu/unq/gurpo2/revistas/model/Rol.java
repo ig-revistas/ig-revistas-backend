@@ -7,6 +7,7 @@ import jakarta.persistence.ManyToMany;
 import jakarta.persistence.Table;
 import java.util.List;
 
+
 @Entity
 @Table(name = "Rol", schema = "revistas")
 public class Rol {

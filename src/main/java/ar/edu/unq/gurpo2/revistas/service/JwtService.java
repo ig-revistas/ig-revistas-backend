@@ -28,12 +28,16 @@ public class JwtService {
 		return createToken(claims, userName);
 	}
 
-	// Create a JWT token with specified claims and subject (user name)
-	private String createToken(Map<String, Object> claims, String userName) {
-		return Jwts.builder().setClaims(claims).setSubject(userName).setIssuedAt(new Date())
-				.setExpiration(new Date(System.currentTimeMillis() + 1000 * 60 * 30)) // Token valid for 30 minutes
-				.signWith(getSignKey(), SignatureAlgorithm.HS256).compact();
-	}
+    // Create a JWT token with specified claims and subject (user name)
+    private String createToken(Map<String, Object> claims, String userName) {
+        return Jwts.builder()
+                .setClaims(claims)
+                .setSubject(userName)
+                .setIssuedAt(new Date())
+                .setExpiration(new Date(System.currentTimeMillis() + 1000 * 60 * 60)) // Token valid for 30 minutes
+                .signWith(getSignKey(), SignatureAlgorithm.HS256)
+                .compact();
+    }
 
 	// Get the signing key for JWT token
 	private Key getSignKey() {

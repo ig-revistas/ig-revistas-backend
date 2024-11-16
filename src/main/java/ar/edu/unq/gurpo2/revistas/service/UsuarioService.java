@@ -2,22 +2,18 @@ package ar.edu.unq.gurpo2.revistas.service;
 
 import java.util.Optional;
 import java.util.UUID;
-import java.util.stream.Collector;
 import java.util.stream.Collectors;
 import java.util.ArrayList;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.HttpStatusCode;
-import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
-import ar.edu.unq.gurpo2.revistas.model.Reserva;
+
 
 import ar.edu.unq.gurpo2.revistas.model.Rol;
 import ar.edu.unq.gurpo2.revistas.model.Usuario;
@@ -25,7 +21,7 @@ import ar.edu.unq.gurpo2.revistas.repository.RolRepository;
 import ar.edu.unq.gurpo2.revistas.repository.UsuarioRepositoy;
 import ar.edu.unq.gurpo2.revistas.security.UserInfoDetails;
 import jakarta.persistence.EntityNotFoundException;
-import jakarta.transaction.Transactional;
+
 
 @Service
 public class UsuarioService implements UserDetailsService {
@@ -99,5 +95,8 @@ public class UsuarioService implements UserDetailsService {
             actualizarUsuario(usuario);
         }
     }
-
+	
+    public Usuario obtenerUsuarioPorId(String usuarioId) {
+        return repository.findById(usuarioId).orElse(null);
+    }
 }

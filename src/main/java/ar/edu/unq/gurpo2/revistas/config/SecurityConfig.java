@@ -41,16 +41,16 @@ public class SecurityConfig {
         http.csrf(csrf -> csrf.disable())
             .cors(cors -> cors.configurationSource(corsConfigurationSource()))
             .authorizeHttpRequests(auth -> auth
-            	    .requestMatchers(
-            	        "/home", 
-            	        "/registrarse", 
-            	        "/revistas",
-            	        "/login",
-            	        "/uploads/**",
-            	        "/revistas/uploads/**"
-            	    ).permitAll()
-            	    .anyRequest().authenticated()
-            	)
+                .requestMatchers(
+                    "/home", 
+                    "/registrarse", 
+                    "/revistas",
+                    "/login",
+                    "/uploads/**",
+                    "/revistas/uploads/**"
+                ).permitAll()
+                .anyRequest().authenticated()
+            )
 
 				.sessionManagement(sess -> sess.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
 				.authenticationProvider(authenticationProvider())

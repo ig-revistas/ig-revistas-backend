@@ -8,8 +8,8 @@
 		<version>3.3.4</version>
 		<relativePath/> <!-- lookup parent from repository -->
 	</parent>
-	<groupId>ciu.jwt</groupId>
-	<artifactId>jwt-1</artifactId>
+	<groupId>Trabajo</groupId>
+	<artifactId>Trabajo</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
 	<name>jwt-1</name>
 	<description>Demo project for Spring Boot</description>

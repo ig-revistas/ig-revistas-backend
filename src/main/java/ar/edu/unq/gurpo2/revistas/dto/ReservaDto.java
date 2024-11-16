@@ -6,8 +6,7 @@ import java.time.LocalDate;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 import ar.edu.unq.gurpo2.revistas.model.Reserva;
-import ar.edu.unq.gurpo2.revistas.model.Revista;
-import ar.edu.unq.gurpo2.revistas.model.Usuario;
+
 
 public class ReservaDto implements Serializable {
 

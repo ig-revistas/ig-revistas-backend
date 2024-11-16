@@ -14,6 +14,7 @@ import jakarta.persistence.JoinColumn;
 import jakarta.persistence.Column; 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Set;
 
 @Entity
 @Table(name = "Usuario", schema = "revistas")
@@ -26,8 +27,8 @@ public class Usuario {
 
     @ManyToMany(fetch = FetchType.LAZY)
     @JoinTable(
-        name = "Usuario_Rol", 
-        joinColumns = @JoinColumn(name = "id_usuario"), 
+        name = "Usuario_Rol",
+        joinColumns = @JoinColumn(name = "id_usuario"),
         inverseJoinColumns = @JoinColumn(name = "id_rol")
     )
     private List<Rol> roles;
