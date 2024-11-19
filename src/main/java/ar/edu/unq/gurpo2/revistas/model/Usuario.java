@@ -1,12 +1,16 @@
 package ar.edu.unq.gurpo2.revistas.model;
 
+import jakarta.persistence.CascadeType;
+import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinTable;
 import jakarta.persistence.ManyToMany;
+import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
 import jakarta.persistence.JoinColumn;
+import java.util.ArrayList;
 import java.util.List;
 
 @Entity
@@ -20,49 +24,93 @@ public class Usuario {
 
     @ManyToMany(fetch = FetchType.LAZY)
     @JoinTable(
-        name = "Usuario_Rol", 
-        joinColumns = @JoinColumn(name = "id_usuario"), 
+        name = "Usuario_Rol",
+        joinColumns = @JoinColumn(name = "id_usuario"),
         inverseJoinColumns = @JoinColumn(name = "id_rol")
     )
-    private List<Rol> roles; 
+    private List<Rol> roles;
+	@OneToMany(mappedBy = "usuario", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+	private List<Reserva> reservas = new ArrayList<>();
+	
+	@Column(name = "portada_url")
+    private String portadaUrl;
+	
+	public List<Reserva> getReservas() {
+		return reservas;
+	}
 
-    public String getId() {
-        return id;
+	public void setReservas(List<Reserva> reservas) {
+		this.reservas = reservas;
+	}
+	
+
+    public String getPortadaUrl() {
+        return portadaUrl;
     }
 
-    public void setId(String id) {
-        this.id = id;
+    public void setPortadaUrl(String portadaUrl) {
+        this.portadaUrl = portadaUrl;
     }
+     
 
-    public String getNombre() {
-        return nombre;
-    }
+	public String getId() {
+		return id;
+	}
 
-    public void setNombre(String nombre) {
-        this.nombre = nombre;
-    }
+	public void setId(String id) {
+		this.id = id;
+	}
 
-    public String getEmail() {
-        return email;
-    }
+	public String getNombre() {
+		return nombre;
+	}
 
-    public void setEmail(String email) {
-        this.email = email;
-    }
+	public void setNombre(String nombre) {
+		this.nombre = nombre;
+	}
 
-    public String getContrasenia() {
-        return contrasenia;
-    }
+	public String getEmail() {
+		return email;
+	}
 
-    public void setContrasenia(String contrasenia) {
-        this.contrasenia = contrasenia;
-    }
+	public void setEmail(String email) {
+		this.email = email;
+	}
 
-    public List<Rol> getRoles() {
-        return roles;
-    }
+	public String getContrasenia() {
+		return contrasenia;
+	}
 
-    public void setRoles(List<Rol> roles) {
-        this.roles = roles;
-    }
+	public void setContrasenia(String contrasenia) {
+		this.contrasenia = contrasenia;
+	}
+
+	public List<Rol> getRoles() {
+		return roles;
+	}
+
+	public void setRoles(List<Rol> roles) {
+		this.roles = roles;
+	}
+
+	public boolean puedeReservar() {
+		return reservas.size() < 3;
+	}
+
+	public void addReserva(Reserva reserva) {
+		if (this.puedeReservar()) {
+			this.reservas.add(reserva);
+		}
+	}
+	public Boolean tieneRolo(String rol) {
+		return this.roles
+				   .stream()
+				   .map(r->r.getNombre())
+				   .anyMatch(n->n.equals(rol));
+	}
+	public void notificarPendiente(Reserva newReserva) {
+		if(this.tieneRolo("OPERADOR_ROLE")) {
+			System.out.println("Notificación: Nueva reserva pendiente para revisión. Detalles de la reserva: " + newReserva);
+		}
+	}
 }
