@@ -16,7 +16,7 @@ public class ReservaDto implements Serializable {
 	public String idUsuario;
 
 	@JsonProperty("revista")
-	public Integer idRevista;
+	public String idRevista;
 	public Integer tiempoVigente;
 
 	public LocalDate fechaPedirReserva;
@@ -45,11 +45,11 @@ public class ReservaDto implements Serializable {
 		this.idUsuario = idUsuario;
 	}
 
-	public Integer getIdRevista() {
+	public String getIdRevista() {
 		return idRevista;
 	}
 
-	public void setIdRevista(Integer idRevista) {
+	public void setIdRevista(String idRevista) {
 		this.idRevista = idRevista;
 	}
 

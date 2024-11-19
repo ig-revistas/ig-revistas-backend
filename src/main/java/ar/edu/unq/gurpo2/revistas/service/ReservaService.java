@@ -31,8 +31,8 @@ public class ReservaService {
 
 		return "Se agrego con exito";
 	}
-	public boolean existeReserva(String idUsuario, Integer idRevista) {
-	    return reservaRepository.existsByUsuarioIdAndRevistaId(idUsuario, idRevista);
+	public boolean existeReserva(String idUsuario, String string) {
+	    return reservaRepository.existsByUsuarioIdAndRevistaId(idUsuario, string);
 	}
 	public java.util.Optional<Reserva> getReservaFindById(String idReserva) {
 		return reservaRepository.findById(idReserva);

@@ -72,19 +72,18 @@ public class UserController {
         return "Welcome to User Profile";
     }
 
-	@PostMapping("/login")
-	public ResponseEntity<?> authenticateAndGetToken(@RequestBody AuthRequest authRequest) {
-		try {
-			Authentication authentication = authenticationManager.authenticate(
-					new UsernamePasswordAuthenticationToken(authRequest.getUsername(), authRequest.getPassword()));
+    @PostMapping("/login")
+    public ResponseEntity<?> authenticateAndGetToken(@RequestBody AuthRequest authRequest) {
+        try {
+            Authentication authentication = authenticationManager.authenticate(
+                    new UsernamePasswordAuthenticationToken(authRequest.getUsername(), authRequest.getPassword()));
 
-			if (authentication.isAuthenticated()) {
-				Usuario usuario = ((UserInfoDetails) authentication.getPrincipal()).getUsuario();
-				String token = jwtService.generateToken(authRequest.getUsername());
-
+            if (authentication.isAuthenticated()) {
+                Usuario usuario = ((UserInfoDetails) authentication.getPrincipal()).getUsuario();
+                String token = jwtService.generateToken(authRequest.getUsername());
                 UsuarioDto usuarioDto = new UsuarioDto(usuario);
-                usuarioDto.setPassword(null);
-                usuarioDto.setPortadaUrl(usuario.getPortadaUrl());
+                usuarioDto.setPassword(null); 
+                usuarioDto.setPortadaUrl(usuario.getPortadaUrl());  
 
                 return ResponseEntity.ok(new UserAuthDto(token, usuarioDto));
             } else {

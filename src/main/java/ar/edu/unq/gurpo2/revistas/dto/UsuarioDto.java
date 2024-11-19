@@ -10,6 +10,7 @@ public class UsuarioDto implements Serializable {
 
 	private static final long serialVersionUID = 1L;
 
+	private String id; 
     private String name;
     private String email;
     private String password;
@@ -20,10 +21,11 @@ public class UsuarioDto implements Serializable {
 	}
 
     public UsuarioDto(Usuario user) {
-        this.name = user.getNombre();
-        this.email = user.getEmail();
+    	this.setId(user.getId());
+    	this.name     = user.getNombre();
+        this.email    = user.getEmail();
         this.password = user.getContrasenia();
-        this.roles = user.getRoles().stream()
+        this.roles    = user.getRoles().stream()
         					.map(rol -> rol.getNombre())
         					.collect(Collectors.toSet());
         this.portadaUrl = user.getPortadaUrl();
@@ -68,4 +70,12 @@ public class UsuarioDto implements Serializable {
     public void setPortadaUrl(String portadaUrl) {
         this.portadaUrl = portadaUrl;
     }
+
+	public String getId() {
+		return id;
+	}
+
+	public void setId(String id) {
+		this.id = id;
+	}
 }

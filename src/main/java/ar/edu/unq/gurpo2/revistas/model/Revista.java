@@ -1,113 +1,117 @@
 package ar.edu.unq.gurpo2.revistas.model;
 
-import java.time.LocalDate;
 import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.Table;
+import java.util.UUID;
+import java.time.LocalDate;
 
 @Entity
 @Table(name = "Revista", schema = "revistas")
 public class Revista {
 
-	@Id
-	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	private int id;
-	private String titulo;
-	private String autor;
-	private LocalDate fechaPublicacion;
-	private String categoria;
-	private String editorial;
-	private String estado;
-	private int cantidadDisponible;
-	private String descripcion;
-	private String portadaUrl;
+    @Id
+    private String id;  
 
-	public int getId() {
-		return id;
-	}
+    private String titulo;
+    private String autor;
+    private LocalDate fechaPublicacion;
+    private String categoria;
+    private String editorial;
+    private String estado;
+    private int cantidadDisponible;
+    private String descripcion;
+    private String portadaUrl;
 
-	public void setId(int id) {
-		this.id = id;
-	}
+    public Revista() {
+        this.id = UUID.randomUUID().toString(); 
+    }
 
-	public String getTitulo() {
-		return titulo;
-	}
+   
+    public String getId() {
+        return id;
+    }
 
-	public void setTitulo(String titulo) {
-		this.titulo = titulo;
-	}
+    public void setId(String id) {
+        this.id = id;
+    }
 
-	public String getAutor() {
-		return autor;
-	}
+ 
+    public String getTitulo() {
+        return titulo;
+    }
 
-	public void setAutor(String autor) {
-		this.autor = autor;
-	}
+    public void setTitulo(String titulo) {
+        this.titulo = titulo;
+    }
 
-	public LocalDate getFechaPublicacion() {
-		return fechaPublicacion;
-	}
+    public String getAutor() {
+        return autor;
+    }
 
-	public void setFechaPublicacion(LocalDate fechaPublicacion) {
-		this.fechaPublicacion = fechaPublicacion;
-	}
+    public void setAutor(String autor) {
+        this.autor = autor;
+    }
 
-	public String getCategoria() {
-		return categoria;
-	}
+    public LocalDate getFechaPublicacion() {
+        return fechaPublicacion;
+    }
 
-	public void setCategoria(String categoria) {
-		this.categoria = categoria;
-	}
+    public void setFechaPublicacion(LocalDate fechaPublicacion) {
+        this.fechaPublicacion = fechaPublicacion;
+    }
 
-	public String getEditorial() {
-		return editorial;
-	}
+    public String getCategoria() {
+        return categoria;
+    }
 
-	public void setEditorial(String editorial) {
-		this.editorial = editorial;
-	}
+    public void setCategoria(String categoria) {
+        this.categoria = categoria;
+    }
 
-	public String getEstado() {
-		return estado;
-	}
+    public String getEditorial() {
+        return editorial;
+    }
 
-	public void setEstado(String estado) {
-		this.estado = estado;
-	}
+    public void setEditorial(String editorial) {
+        this.editorial = editorial;
+    }
 
-	public int getCantidadDisponible() {
-		return cantidadDisponible;
-	}
+    public String getEstado() {
+        return estado;
+    }
 
-	public void setCantidadDisponible(int cantidadDisponible) {
-		this.cantidadDisponible = cantidadDisponible;
-	}
+    public void setEstado(String estado) {
+        this.estado = estado;
+    }
 
-	public String getDescripcion() {
-		return descripcion;
-	}
+    public int getCantidadDisponible() {
+        return cantidadDisponible;
+    }
 
-	public void setDescripcion(String descripcion) {
-		this.descripcion = descripcion;
-	}
+    public void setCantidadDisponible(int cantidadDisponible) {
+        this.cantidadDisponible = cantidadDisponible;
+    }
 
-	public String getPortadaUrl() {
-		return portadaUrl;
-	}
+    public String getDescripcion() {
+        return descripcion;
+    }
 
-	public void setPortadaUrl(String portadaUrl) {
-		this.portadaUrl = portadaUrl;
-	}
+    public void setDescripcion(String descripcion) {
+        this.descripcion = descripcion;
+    }
+
+    public String getPortadaUrl() {
+        return portadaUrl;
+    }
+
+    public void setPortadaUrl(String portadaUrl) {
+        this.portadaUrl = portadaUrl;
+    }
+
 
 	public void tomarUnaRevista() {
-		if (this.cantidadDisponible > 0) {
-			this.cantidadDisponible--;
-		}
+		// TODO Auto-generated method stub
+		
 	}
-
 }

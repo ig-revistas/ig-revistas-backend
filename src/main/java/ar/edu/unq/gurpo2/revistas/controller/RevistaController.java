@@ -19,6 +19,7 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("/revistas")
@@ -29,41 +30,45 @@ public class RevistaController {
 
 	private static final String UPLOAD_DIR = "./uploads/";
 
-    @PostMapping(value = "", consumes = "multipart/form-data")
-    @PreAuthorize("hasAuthority('ADMIN_ROLE')")
-    public ResponseEntity<?> crearRevista(
-            @Validated @RequestPart("revista") RevistaDto nuevaRevistaDto,
-            @RequestPart("portada") MultipartFile portada) {
-        try {
-            String originalFilename = portada.getOriginalFilename();
-            Path path = Paths.get(UPLOAD_DIR + originalFilename);
-            Files.createDirectories(path.getParent());
-            Files.write(path, portada.getBytes());
+	@PostMapping(value = "", consumes = "multipart/form-data")
+	@PreAuthorize("hasAuthority('ADMIN_ROLE')")
+	public ResponseEntity<?> crearRevista(
+	        @Validated @RequestPart("revista") RevistaDto nuevaRevistaDto,
+	        @RequestPart("portada") MultipartFile portada) {
+	    try {
+	        String originalFilename = portada.getOriginalFilename();
+	        Path path = Paths.get(UPLOAD_DIR + originalFilename);
+	        Files.createDirectories(path.getParent());
+	        Files.write(path, portada.getBytes());
+	        Revista nuevaRevista = nuevaRevistaDto.toEntity();
+	        nuevaRevista.setPortadaUrl("/uploads/" + originalFilename);
+	        Revista revistaCreada = revistaService.crearRevista(nuevaRevista);
 
-			Revista nuevaRevista = nuevaRevistaDto.toEntity();
-			nuevaRevista.setPortadaUrl("/uploads/" + originalFilename);
+	
+	        RevistaDto revistaDto = new RevistaDto(revistaCreada);
 
-			Revista revistaCreada = revistaService.crearRevista(nuevaRevista);
-			return ResponseEntity.status(HttpStatus.CREATED).body(revistaCreada);
-		} catch (IOException e) {
-			return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
-					.body("Error al subir el archivo: " + e.getMessage());
-		} catch (Exception e) {
-			return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
-					.body("Error al crear la revista: " + e.getMessage());
-		}
+	        return ResponseEntity.status(HttpStatus.CREATED).body(revistaDto);
+	    } catch (IOException e) {
+	        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+	                .body("Error al subir el archivo: " + e.getMessage());
+	    } catch (Exception e) {
+	        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+	                .body("Error al crear la revista: " + e.getMessage());
+	    }
 	}
 
 	@GetMapping()
-	public ResponseEntity<List<Revista>> getRevistas() {
-		String currentDir = System.getProperty("user.dir");
-		System.out.println("Directorio actual de ejecución: " + currentDir);
-		try {
-			List<Revista> revistas = revistaService.obtenerTodasLasRevistas();
-			return ResponseEntity.ok(revistas);
-		} catch (Exception e) {
-			return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(null);
-		}
+	public ResponseEntity<List<RevistaDto>> getRevistas() {
+	    try {
+	        List<Revista> revistas = revistaService.obtenerTodasLasRevistas();
+	        List<RevistaDto> revistaDtos = revistas.stream()
+	            .map(revista -> new RevistaDto(revista))
+	            .collect(Collectors.toList());
+	        
+	        return ResponseEntity.ok(revistaDtos);
+	    } catch (Exception e) {
+	        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(null);
+	    }
 	}
 
     @GetMapping("/uploads/{filename:.+}")
@@ -85,7 +90,7 @@ public class RevistaController {
     @PutMapping(value = "/{id}", consumes = "multipart/form-data")
     @PreAuthorize("hasAuthority('ADMIN_ROLE')")
     public ResponseEntity<?> actualizarRevista(
-            @PathVariable Integer id,
+            @PathVariable String id,
             @Validated @RequestPart("revista") RevistaDto revistaActualizadaDto,
             @RequestPart(value = "portada", required = false) MultipartFile portada) {
         try {
@@ -123,7 +128,7 @@ public class RevistaController {
         }
     }
     @DeleteMapping("/{id}")
-    public ResponseEntity<String> eliminarRevista(@PathVariable Integer id) {
+    public ResponseEntity<String> eliminarRevista(@PathVariable String id) {
         Optional<Revista> revistaExistenteOpt = revistaService.obtenerRevistaPorId(id);
 
         if (revistaExistenteOpt.isPresent()) {
