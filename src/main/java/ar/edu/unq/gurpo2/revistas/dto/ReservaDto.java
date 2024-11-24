@@ -18,22 +18,26 @@ public class ReservaDto implements Serializable {
 	@JsonProperty("revista")
 	public String idRevista;
 	public Integer tiempoVigente;
-
+	
+	public String id;
 	public LocalDate fechaPedirReserva;
 	public LocalDate fechaAprobacion;
 	public LocalDate fechaRechazo;
-
+	
+	public String estado;
 	public ReservaDto() {
 		// Constructor sin parametros
 	}
 
 	public ReservaDto(Reserva reserva) {
+		this.id = reserva.getId();
 		this.idRevista = reserva.getRevista().getId();
 		this.idUsuario = reserva.getUsuario().getId();
 		this.tiempoVigente = reserva.getTiempoVigente();
 		this.fechaAprobacion = reserva.getFechaAprobacion();
 		this.fechaPedirReserva = reserva.getFechaPedirReserva();
 		this.fechaRechazo = reserva.getFechaRechazo();
+		this.estado=reserva.getEstado();
 
 	}
 

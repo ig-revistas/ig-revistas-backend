@@ -1,9 +1,12 @@
 package ar.edu.unq.gurpo2.revistas.controller;
 
 import ar.edu.unq.gurpo2.revistas.dto.RevistaDto;
+import ar.edu.unq.gurpo2.revistas.dto.RevistaInfDto;
+import ar.edu.unq.gurpo2.revistas.dto.UsuarioDto;
 import ar.edu.unq.gurpo2.revistas.model.Revista;
+import ar.edu.unq.gurpo2.revistas.model.Usuario;
 import ar.edu.unq.gurpo2.revistas.service.RevistaService;
-
+import jakarta.transaction.Transactional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -20,6 +23,8 @@ import java.nio.file.Paths;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
+import org.springframework.web.bind.annotation.GetMapping;
+
 
 @RestController
 @RequestMapping("/revistas")
@@ -41,7 +46,10 @@ public class RevistaController {
 	        Files.createDirectories(path.getParent());
 	        Files.write(path, portada.getBytes());
 	        Revista nuevaRevista = nuevaRevistaDto.toEntity();
+	        nuevaRevista.setFechaPublicacion(nuevaRevistaDto.getFechaPublicacion());
+	        nuevaRevista.setCantidadDisponible(nuevaRevistaDto.getCantidadDisponible());
 	        nuevaRevista.setPortadaUrl("/uploads/" + originalFilename);
+	       
 	        Revista revistaCreada = revistaService.crearRevista(nuevaRevista);
 
 	
@@ -152,5 +160,16 @@ public class RevistaController {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Revista no encontrada");
         }
     }
+    @Transactional
+    @GetMapping("/{idRevista}")
+    public ResponseEntity<RevistaInfDto> getRevista(@PathVariable String idRevista) {
+    	if (idRevista == null || idRevista.isEmpty()) {
+            throw new IllegalArgumentException("El idRevista no puede ser nulo ni vacío");
+        }
+        Revista revista = this.revistaService.getRevistaById(idRevista);
+        RevistaInfDto revistaInfoDto = new RevistaInfDto(revista);
+        return ResponseEntity.ok(revistaInfoDto);
+    }
+    
 
 }
