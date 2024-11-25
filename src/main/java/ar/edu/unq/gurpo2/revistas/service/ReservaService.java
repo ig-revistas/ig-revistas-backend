@@ -56,7 +56,7 @@ public class ReservaService {
 	public List<Reserva> getAllReserva() {
 	    return this.reservaRepository.findAll();
 	}
-
+	
 	
 }
 
