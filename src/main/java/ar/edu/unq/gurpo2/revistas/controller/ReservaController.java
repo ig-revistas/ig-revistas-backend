@@ -120,4 +120,17 @@ public class ReservaController {
         List<Reserva> reservas = this.reservaService.getAllReserva();
         return reservas.stream().map(reserva -> new ReservaDto(reserva)).collect(Collectors.toList());
     }
+    @GetMapping("/usuario/{usuarioId}")
+    public ResponseEntity<List<ReservaDto>> obtenerReservas(@PathVariable String usuarioId) {
+        Usuario usuario = usuarioService.obtenerUsuarioPorId(usuarioId);
+        if (usuario == null) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);
+        }
+        List<Reserva> reservas = usuarioService.obtenerReservasDeUsuario(usuarioId);
+        List<ReservaDto> reservasDto = reservas.stream()
+            .map(ReservaDto::new)
+            .collect(Collectors.toList());
+        return ResponseEntity.ok(reservasDto);
+    }
+
 }

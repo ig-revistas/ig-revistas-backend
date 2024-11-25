@@ -13,8 +13,7 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
-
-
+import ar.edu.unq.gurpo2.revistas.model.Reserva;
 import ar.edu.unq.gurpo2.revistas.model.Rol;
 import ar.edu.unq.gurpo2.revistas.model.Usuario;
 import ar.edu.unq.gurpo2.revistas.repository.RolRepository;
@@ -99,4 +98,10 @@ public class UsuarioService implements UserDetailsService {
     public Usuario obtenerUsuarioPorId(String usuarioId) {
         return repository.findById(usuarioId).orElse(null);
     }
+    public List<Reserva> obtenerReservasDeUsuario(String usuarioId) {
+        Usuario usuario = repository.findById(usuarioId)
+            .orElseThrow(() -> new EntityNotFoundException("Usuario no encontrado"));
+        return usuario.getReservas(); 
+    }
+
 }
