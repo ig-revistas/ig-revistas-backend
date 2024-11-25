@@ -60,14 +60,12 @@ public class ReservaService {
 	    return this.reservaRepository.findAll();
 	}
 	
-	
 	public List<Reserva> getAllReservaPendiente() {
 		
 		return  this.getAllReserva().stream()
 				.filter(r->r.getEstado().equals("PENDIENTE"))
 				.collect(Collectors.toList());
 	}
-
 	
 }
 

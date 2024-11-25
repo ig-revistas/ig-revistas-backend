@@ -15,6 +15,7 @@ public class UsuarioDto implements Serializable {
     private String email;
     private String password;
     private Set<String> roles;
+    
     private String portadaUrl;
 
 	public UsuarioDto() {

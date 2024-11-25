@@ -78,7 +78,19 @@ public class RevistaController {
 	        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(null);
 	    }
 	}
-
+	@GetMapping("/{id}")
+    public ResponseEntity<Revista> getRevistaPorId(@PathVariable String id) {
+        try {
+            Optional<Revista> revistaOpt = revistaService.obtenerRevistaPorId(id);
+            if (revistaOpt.isPresent()) {
+                return ResponseEntity.ok(revistaOpt.get());
+            } else {
+                return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);
+            }
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(null);
+        }
+    }
     @GetMapping("/uploads/{filename:.+}")
     public ResponseEntity<byte[]> getImage(@PathVariable String filename) {
         try {

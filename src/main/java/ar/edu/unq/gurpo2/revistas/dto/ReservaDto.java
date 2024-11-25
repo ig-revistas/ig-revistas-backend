@@ -7,90 +7,92 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 
 import ar.edu.unq.gurpo2.revistas.model.Reserva;
 
-
 public class ReservaDto implements Serializable {
+    private static final long serialVersionUID = 1L;
 
-	private static final long serialVersionUID = 1L;
+    @JsonProperty("usuario")
+    private String idUsuario;
 
-	@JsonProperty("usuario")
-	public String idUsuario;
+    @JsonProperty("revista")
+    private RevistaDto revista;
 
-	@JsonProperty("revista")
-	public String idRevista;
-	public Integer tiempoVigente;
-	
-	public String id;
-	public LocalDate fechaPedirReserva;
-	public LocalDate fechaAprobacion;
-	public LocalDate fechaRechazo;
-	
-	public String estado;
-	public ReservaDto() {
-		// Constructor sin parametros
-	}
+    private Integer tiempoVigente;
+    private LocalDate fechaPedirReserva;
+    private LocalDate fechaAprobacion;
+    private LocalDate fechaRechazo;
+    private String estado;
 
-	public ReservaDto(Reserva reserva) {
-		this.id = reserva.getId();
-		this.idRevista = reserva.getRevista().getId();
-		this.idUsuario = reserva.getUsuario().getId();
-		this.tiempoVigente = reserva.getTiempoVigente();
-		this.fechaAprobacion = reserva.getFechaAprobacion();
-		this.fechaPedirReserva = reserva.getFechaPedirReserva();
-		this.fechaRechazo = reserva.getFechaRechazo();
-		this.estado=reserva.getEstado();
+    private String idRevista;
 
-	}
 
-	public String getIdUsuario() {
-		return idUsuario;
-	}
+    public ReservaDto() {}
 
-	public void setIdUsuario(String idUsuario) {
-		this.idUsuario = idUsuario;
-	}
+   
+    public ReservaDto(Reserva reserva) {
+        this.idUsuario = reserva.getUsuario().getId();
+        this.revista = new RevistaDto(reserva.getRevista());
+        this.tiempoVigente = reserva.getTiempoVigente();
+        this.fechaAprobacion = reserva.getFechaAprobacion();
+        this.fechaPedirReserva = reserva.getFechaPedirReserva();
+        this.fechaRechazo = reserva.getFechaRechazo();
+        this.estado = reserva.getEstado();
+        this.idRevista = reserva.getRevista().getId(); 
+    }
 
-	public String getIdRevista() {
-		return idRevista;
-	}
 
-	public void setIdRevista(String idRevista) {
-		this.idRevista = idRevista;
-	}
+    public String getIdUsuario() {
+        return idUsuario;
+    }
 
-	public static long getSerialversionuid() {
-		return serialVersionUID;
-	}
+    public void setIdUsuario(String idUsuario) {
+        this.idUsuario = idUsuario;
+    }
 
-	public Integer getTiempoVigente() {
-		return tiempoVigente;
-	}
+    public String getIdRevista() {
+        return idRevista;
+    }
 
-	public void setTiempoVigente(Integer tiempoVigente) {
-		this.tiempoVigente = tiempoVigente;
-	}
+    public void setIdRevista(String idRevista) {
+        this.idRevista = idRevista;
+    }
 
-	public LocalDate getFechaPedirReserva() {
-		return fechaPedirReserva;
-	}
+    public Integer getTiempoVigente() {
+        return tiempoVigente;
+    }
 
-	public void setFechaPedirReserva(LocalDate fechaPedirReserva) {
-		this.fechaPedirReserva = fechaPedirReserva;
-	}
+    public void setTiempoVigente(Integer tiempoVigente) {
+        this.tiempoVigente = tiempoVigente;
+    }
 
-	public LocalDate getFechaAprobacion() {
-		return fechaAprobacion;
-	}
+    public LocalDate getFechaPedirReserva() {
+        return fechaPedirReserva;
+    }
 
-	public void setFechaAprobacion(LocalDate fechaAprobacion) {
-		this.fechaAprobacion = fechaAprobacion;
-	}
+    public void setFechaPedirReserva(LocalDate fechaPedirReserva) {
+        this.fechaPedirReserva = fechaPedirReserva;
+    }
 
-	public LocalDate getFechaRechazo() {
-		return fechaRechazo;
-	}
+    public LocalDate getFechaAprobacion() {
+        return fechaAprobacion;
+    }
 
-	public void setFechaRechazo(LocalDate fechaRechazo) {
-		this.fechaRechazo = fechaRechazo;
-	}
+    public void setFechaAprobacion(LocalDate fechaAprobacion) {
+        this.fechaAprobacion = fechaAprobacion;
+    }
 
+    public LocalDate getFechaRechazo() {
+        return fechaRechazo;
+    }
+
+    public void setFechaRechazo(LocalDate fechaRechazo) {
+        this.fechaRechazo = fechaRechazo;
+    }
+
+    public String getEstado() {
+        return estado;
+    }
+
+    public void setEstado(String estado) {
+        this.estado = estado;
+    }
 }
