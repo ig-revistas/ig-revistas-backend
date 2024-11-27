@@ -48,7 +48,8 @@ public class SecurityConfig {
                     "/revistas",
                     "/login",
                     "/uploads/**",
-                    "/revistas/uploads/**"
+                    "/revistas/uploads/**",
+                    "/usuario/{id}"
                 ).permitAll()
                 .anyRequest().authenticated()
             )

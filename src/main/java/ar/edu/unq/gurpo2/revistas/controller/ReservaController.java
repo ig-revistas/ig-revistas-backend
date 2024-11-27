@@ -75,24 +75,21 @@ public class ReservaController {
         String responseMessage = this.reservaService.addReserva(newReserva);
 
         revista.tomarUnaRevista();
-        	// TODO me falta agregar las notificacion a los operadores de una nueva
-     		// reserva, lo que hace notificarPendiente es solo imprimir por pantalla un
-     		// mensaje,
-     		// pero la logica para tratar con la notificacion al fronted es de otra tarea
+        	
         this.usuarioService.getAllUsuariosOperador().forEach(op -> op.notificarPendiente(newReserva));
 
         return ResponseEntity.status(HttpStatus.CREATED).body(responseMessage);
     }
 
     @PreAuthorize("hasAuthority('OPERADOR_ROLE')")
-    @PutMapping("/aprobar/{idReserva}")
-    public ResponseEntity<String> aprobarReserva(@PathVariable String idReserva) {
+    @PutMapping("/aprobar/{idReserva}/{tiempoVigente}")
+    public ResponseEntity<String> aprobarReserva(@PathVariable String idReserva, @PathVariable Integer tiempoVigente) {
 
         Optional<Reserva> optionalReserva = this.reservaService.getReservaFindById(idReserva);
 
         if (optionalReserva.isPresent()) {
             Reserva reserva = optionalReserva.get();
-            String responseMessage = this.reservaService.aprobarReserva(reserva);
+            String responseMessage = this.reservaService.aprobarReserva(reserva, tiempoVigente);
             return ResponseEntity.status(HttpStatus.CREATED).body(responseMessage);
         } else {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Reserva no encontrada.");
@@ -120,6 +117,15 @@ public class ReservaController {
         List<Reserva> reservas = this.reservaService.getAllReserva();
         return reservas.stream().map(reserva -> new ReservaDto(reserva)).collect(Collectors.toList());
     }
+
+    
+    @PreAuthorize("hasAuthority('OPERADOR_ROLE')")
+    @GetMapping("/todasLasPendientes")
+    public List<ReservaDto> todasLasReservasPendientes() {
+        List<Reserva> reservas = this.reservaService.getAllReservaPendiente();
+        return reservas.stream().map(reserva -> new ReservaDto(reserva)).collect(Collectors.toList());
+    }
+
     @GetMapping("/usuario/{usuarioId}")
     public ResponseEntity<List<ReservaDto>> obtenerReservas(@PathVariable String usuarioId) {
         Usuario usuario = usuarioService.obtenerUsuarioPorId(usuarioId);
@@ -132,5 +138,6 @@ public class ReservaController {
             .collect(Collectors.toList());
         return ResponseEntity.ok(reservasDto);
     }
+
 
 }

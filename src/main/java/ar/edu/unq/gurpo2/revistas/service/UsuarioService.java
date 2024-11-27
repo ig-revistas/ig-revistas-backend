@@ -96,6 +96,7 @@ public class UsuarioService implements UserDetailsService {
     }
 	
     public Usuario obtenerUsuarioPorId(String usuarioId) {
+    	
         return repository.findById(usuarioId).orElse(null);
     }
     public List<Reserva> obtenerReservasDeUsuario(String usuarioId) {

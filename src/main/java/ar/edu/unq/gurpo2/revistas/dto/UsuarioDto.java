@@ -22,7 +22,7 @@ public class UsuarioDto implements Serializable {
 	}
 
     public UsuarioDto(Usuario user) {
-    	this.setId(user.getId());
+    	this.id       = user.getId();
     	this.name     = user.getNombre();
         this.email    = user.getEmail();
         this.password = user.getContrasenia();

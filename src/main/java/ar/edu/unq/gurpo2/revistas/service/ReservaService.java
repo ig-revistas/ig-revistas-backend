@@ -3,6 +3,7 @@ package ar.edu.unq.gurpo2.revistas.service;
 import java.time.LocalDate;
 import java.util.List;
 import java.util.UUID;
+import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -37,8 +38,9 @@ public class ReservaService {
 	public java.util.Optional<Reserva> getReservaFindById(String idReserva) {
 		return reservaRepository.findById(idReserva);
 	}
-	public String aprobarReserva(Reserva reserva) {
+	public String aprobarReserva(Reserva reserva, Integer tiempoVigente) {
 		reserva.setEstado("APROBADA");
+		reserva.setTiempoVigente(tiempoVigente);
 		reserva.setFechaAprobacion(LocalDate.now());
 		reservaRepository.save(reserva);
 		
@@ -47,6 +49,7 @@ public class ReservaService {
 	}
 	public String rechazarReserva(Reserva reserva) {
 		reserva.setEstado("RECHAZADA");
+		//reserva.getUsuario().eliminarRecervaRechazada(reserva);
 		reserva.setFechaRechazo(LocalDate.now());
 		reservaRepository.save(reserva);
 		
@@ -57,6 +60,12 @@ public class ReservaService {
 	    return this.reservaRepository.findAll();
 	}
 	
+	public List<Reserva> getAllReservaPendiente() {
+		
+		return  this.getAllReserva().stream()
+				.filter(r->r.getEstado().equals("PENDIENTE"))
+				.collect(Collectors.toList());
+	}
 	
 }
 

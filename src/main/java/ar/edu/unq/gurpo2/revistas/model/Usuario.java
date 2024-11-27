@@ -12,6 +12,7 @@ import jakarta.persistence.Table;
 import jakarta.persistence.JoinColumn;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Entity
 @Table(name = "Usuario", schema = "revistas")
@@ -30,7 +31,7 @@ public class Usuario {
     )
     private List<Rol> roles;
 	@OneToMany(mappedBy = "usuario", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
-	private List<Reserva> reservas = new ArrayList<>();
+	private List<Reserva> reservas = new ArrayList<>();//<- reservas aprovadas o en pendiente
 	
 	@Column(name = "portada_url")
     private String portadaUrl;
@@ -94,7 +95,10 @@ public class Usuario {
 	}
 
 	public boolean puedeReservar() {
-		return reservas.size() < 3;
+		long reservasActivas = reservas.stream()
+                 .filter(reserva -> reserva.getEstado().equals("PENDIENTE")|| reserva.getEstado().equals("APROBADA"))
+                 .count();
+		return reservasActivas < 3;
 	}
 
 	public void addReserva(Reserva reserva) {
@@ -113,4 +117,9 @@ public class Usuario {
 			System.out.println("Notificación: Nueva reserva pendiente para revisión. Detalles de la reserva: " + newReserva);
 		}
 	}
+//	public void eliminarRecervaRechazada(Reserva recerva) {
+//		 this.reservas= this.reservas.stream()
+//					 		.filter(r-> !r.equals(recerva))
+//					 		.collect(Collectors.toList());
+//	}
 }
