@@ -4,12 +4,12 @@ public class UserAuthDto {
 
     private String token;
     private UsuarioDto usuario;
-
+    
+   
     public UserAuthDto(String token, UsuarioDto usuario) {
         this.token = token;
         this.usuario = usuario;
     }
-
     public String getToken() {
         return token;
     }
@@ -25,5 +25,5 @@ public class UserAuthDto {
     public void setUsuario(UsuarioDto usuario) {
         this.usuario = usuario;
     }
-}
 
+}

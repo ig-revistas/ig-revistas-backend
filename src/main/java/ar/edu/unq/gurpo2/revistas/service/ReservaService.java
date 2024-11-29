@@ -1,0 +1,72 @@
+package ar.edu.unq.gurpo2.revistas.service;
+
+import java.time.LocalDate;
+import java.util.List;
+import java.util.UUID;
+import java.util.stream.Collectors;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
+
+import ar.edu.unq.gurpo2.revistas.model.Reserva;
+import ar.edu.unq.gurpo2.revistas.repository.ReservaRepository;
+import jakarta.transaction.Transactional;
+
+@Service
+public class ReservaService {
+
+	@Autowired
+	public ReservaRepository reservaRepository;
+
+	@Transactional
+	public String addReserva(Reserva reservaInfo) {
+		try {
+			String idReserva = UUID.randomUUID().toString();
+			reservaInfo.setId(idReserva);
+
+			reservaRepository.save(reservaInfo);
+		} catch (Exception e) {
+			return "Error al agregar la reserva: " + e.getMessage();
+		}
+
+		return "Se agrego con exito";
+	}
+	public boolean existeReserva(String idUsuario, String string) {
+	    return reservaRepository.existsByUsuarioIdAndRevistaId(idUsuario, string);
+	}
+	public java.util.Optional<Reserva> getReservaFindById(String idReserva) {
+		return reservaRepository.findById(idReserva);
+	}
+	public String aprobarReserva(Reserva reserva, Integer tiempoVigente) {
+		reserva.setEstado("APROBADA");
+		reserva.setTiempoVigente(tiempoVigente);
+		reserva.setFechaAprobacion(LocalDate.now());
+		reservaRepository.save(reserva);
+		
+        return "Reserva aprobada exitosamente.";
+		
+	}
+	public String rechazarReserva(Reserva reserva) {
+		reserva.setEstado("RECHAZADA");
+		//reserva.getUsuario().eliminarRecervaRechazada(reserva);
+		reserva.setFechaRechazo(LocalDate.now());
+		reservaRepository.save(reserva);
+		
+        return "Reserva rechazada exitosamente.";
+	}
+	@Transactional
+	public List<Reserva> getAllReserva() {
+	    return this.reservaRepository.findAll();
+	}
+	
+	public List<Reserva> getAllReservaPendiente() {
+		
+		return  this.getAllReserva().stream()
+				.filter(r->r.getEstado().equals("PENDIENTE"))
+				.collect(Collectors.toList());
+	}
+	
+}
+
+

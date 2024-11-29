@@ -23,52 +23,53 @@ import org.springframework.web.multipart.MultipartFile;
 
 import ar.edu.unq.gurpo2.revistas.dto.UserAuthDto;
 import ar.edu.unq.gurpo2.revistas.dto.UsuarioDto;
+import ar.edu.unq.gurpo2.revistas.dto.UsuarioInfDto;
 import ar.edu.unq.gurpo2.revistas.model.Usuario;
 import ar.edu.unq.gurpo2.revistas.request.AuthRequest;
 import ar.edu.unq.gurpo2.revistas.security.UserInfoDetails;
 import ar.edu.unq.gurpo2.revistas.service.JwtService;
 import ar.edu.unq.gurpo2.revistas.service.UsuarioService;
 import io.jsonwebtoken.io.IOException;
+import jakarta.transaction.Transactional;
+
+import org.springframework.web.bind.annotation.RequestParam;
+
 
 
 @RestController
 @RequestMapping()
 public class UserController {
 
-    @Autowired
-    private UsuarioService usuarioService;
+	@Autowired
+	private UsuarioService usuarioService;
 
-    @Autowired
-    private JwtService jwtService;
+	@Autowired
+	private JwtService jwtService;
 
     @Autowired
     private AuthenticationManager authenticationManager;
 
     private static final String UPLOAD_DIR = "./uploads/";
 
-    @GetMapping("/home")
-    public String welcome() {
-        return "Welcome! This endpoint is not secure.";
-    }
+	@GetMapping("/home")
+	public String welcome() {
+		return "Welcome! This endpoint is not secure.";
+	}
 
-    @PostMapping("/registrarse")
-    public ResponseEntity<?> registerUser(@RequestBody UsuarioDto userDto) {
-        if (userDto.getPassword() == null || userDto.getPassword().isEmpty()) {
-            return ResponseEntity.badRequest().body("La contraseña no puede estar vacía ni ser null");
-        }
+	@PostMapping("/registrarse")
+	public ResponseEntity<?> registerUser(@RequestBody UsuarioDto userDto) {
+		if (userDto.getPassword() == null || userDto.getPassword().isEmpty()) {
+			return ResponseEntity.badRequest().body("La contraseña no puede estar vacía ni ser null");
+		}
 
-        Usuario userInfo = new Usuario();
-        userInfo.setNombre(userDto.getName());
-        userInfo.setEmail(userDto.getEmail());
-        userInfo.setContrasenia(userDto.getPassword());
+		Usuario userInfo = new Usuario();
+		userInfo.setNombre(userDto.getName());
+		userInfo.setEmail(userDto.getEmail());
+		userInfo.setContrasenia(userDto.getPassword());
 
-        String responseMessage = usuarioService.addUser(userInfo);  // Ahora es un String
-
-        return ResponseEntity.ok(responseMessage);  // Devuelves el mensaje
-    }
-
-
-
+		String responseMessage = usuarioService.addUser(userInfo);
+		return ResponseEntity.ok(responseMessage);
+	}
 
     @GetMapping("/perfil")
     @PreAuthorize("hasAuthority('ROLE_USER')")
@@ -80,16 +81,14 @@ public class UserController {
     public ResponseEntity<?> authenticateAndGetToken(@RequestBody AuthRequest authRequest) {
         try {
             Authentication authentication = authenticationManager.authenticate(
-                new UsernamePasswordAuthenticationToken(authRequest.getUsername(), authRequest.getPassword())
-            );
+                    new UsernamePasswordAuthenticationToken(authRequest.getUsername(), authRequest.getPassword()));
 
             if (authentication.isAuthenticated()) {
                 Usuario usuario = ((UserInfoDetails) authentication.getPrincipal()).getUsuario();
                 String token = jwtService.generateToken(authRequest.getUsername());
-
                 UsuarioDto usuarioDto = new UsuarioDto(usuario);
-                usuarioDto.setPassword(null);
-                usuarioDto.setPortadaUrl(usuario.getPortadaUrl());
+                usuarioDto.setPassword(null); 
+                usuarioDto.setPortadaUrl(usuario.getPortadaUrl());  
 
                 return ResponseEntity.ok(new UserAuthDto(token, usuarioDto));
             } else {
@@ -111,7 +110,7 @@ public class UserController {
             Files.createDirectories(path.getParent());
             Files.write(path, portada.getBytes());
 
-            Usuario usuario = usuarioService.obtenerUsuarioPorId(usuarioId);
+            Usuario usuario = usuarioService.getUsuarioById(usuarioId);
             if (usuario == null) {
                 return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Usuario no encontrado");
             }
@@ -141,5 +140,16 @@ public class UserController {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(null);
         }
     }
+    @Transactional
+    @GetMapping("/usuario/{idUsuario}")
+    public ResponseEntity<UsuarioInfDto> getUsuario(@PathVariable String idUsuario) {
+        if (idUsuario == null || idUsuario.isEmpty()) {
+            throw new IllegalArgumentException("El idUsuario no puede ser nulo ni vacío");
+        }
+        Usuario usuario = this.usuarioService.getUsuarioById(idUsuario);
+        UsuarioInfDto usuarioInfoDto = new UsuarioInfDto(usuario);
+        return ResponseEntity.ok(usuarioInfoDto);
+    }
+    
 }
 

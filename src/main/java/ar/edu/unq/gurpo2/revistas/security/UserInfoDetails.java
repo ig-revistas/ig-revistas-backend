@@ -12,60 +12,57 @@ import ar.edu.unq.gurpo2.revistas.model.Usuario;
 
 public class UserInfoDetails implements UserDetails {
 
-    private static final long serialVersionUID = 1L;
-    
-    private Usuario usuario; 
-    private String username;
-    private String password;
-    private List<GrantedAuthority> authorities;
+	private static final long serialVersionUID = 1L;
 
-    public UserInfoDetails(Usuario userInfo) {
-        this.usuario = userInfo; 
-        this.username = userInfo.getEmail(); 
-        this.password = userInfo.getContrasenia();
-        this.authorities = userInfo.getRoles()
-                .stream()
-                .map(role -> new SimpleGrantedAuthority(role.getNombre())) 
-                .collect(Collectors.toList());
-    }
+	private Usuario usuario;
+	private String username;
+	private String password;
+	private List<GrantedAuthority> authorities;
 
-   
-    public Usuario getUsuario() {
-        return this.usuario;
-    }
+	public UserInfoDetails(Usuario userInfo) {
+		this.usuario = userInfo;
+		this.username = userInfo.getEmail();
+		this.password = userInfo.getContrasenia();
+		this.authorities = userInfo.getRoles().stream().map(role -> new SimpleGrantedAuthority(role.getNombre()))
+				.collect(Collectors.toList());
+	}
 
-    @Override
-    public Collection<? extends GrantedAuthority> getAuthorities() {
-        return authorities;
-    }
+	public Usuario getUsuario() {
+		return this.usuario;
+	}
 
-    @Override
-    public String getPassword() {
-        return password;
-    }
+	@Override
+	public Collection<? extends GrantedAuthority> getAuthorities() {
+		return authorities;
+	}
 
-    @Override
-    public String getUsername() {
-        return username;
-    }
+	@Override
+	public String getPassword() {
+		return password;
+	}
 
-    @Override
-    public boolean isAccountNonExpired() {
-        return true; 
-    }
+	@Override
+	public String getUsername() {
+		return username;
+	}
 
-    @Override
-    public boolean isAccountNonLocked() {
-        return true; 
-    }
+	@Override
+	public boolean isAccountNonExpired() {
+		return true;
+	}
 
-    @Override
-    public boolean isCredentialsNonExpired() {
-        return true; 
-    }
+	@Override
+	public boolean isAccountNonLocked() {
+		return true;
+	}
 
-    @Override
-    public boolean isEnabled() {
-        return true; 
-    }
+	@Override
+	public boolean isCredentialsNonExpired() {
+		return true;
+	}
+
+	@Override
+	public boolean isEnabled() {
+		return true;
+	}
 }

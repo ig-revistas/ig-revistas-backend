@@ -1,6 +1,5 @@
 package ar.edu.unq.gurpo2.revistas.model;
 
-import java.time.LocalDate;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
 import jakarta.persistence.Enumerated;
@@ -8,14 +7,16 @@ import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.Table;
+import java.util.UUID;
+import java.time.LocalDate;
 
 @Entity
 @Table(name = "Revista", schema = "revistas")
 public class Revista {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private int id;
+    private String id;  
+
     private String titulo;
     private String autor;
     private LocalDate fechaPublicacion;
@@ -29,13 +30,21 @@ public class Revista {
     private Estado estado;
     
     public int getId() {
+
+    public Revista() {
+        this.id = UUID.randomUUID().toString(); 
+    }
+
+   
+    public String getId() {
         return id;
     }
 
-    public void setId(int id) {
+    public void setId(String id) {
         this.id = id;
     }
 
+ 
     public String getTitulo() {
         return titulo;
     }
@@ -107,4 +116,10 @@ public class Revista {
     public void setPortadaUrl(String portadaUrl) {
         this.portadaUrl = portadaUrl;
     }
+
+
+	public void tomarUnaRevista() {
+		// TODO Auto-generated method stub
+		
+	}
 }
