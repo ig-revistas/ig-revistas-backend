@@ -3,7 +3,7 @@ package ar.edu.unq.gurpo2.revistas.controller;
 import ar.edu.unq.gurpo2.revistas.dto.RevistaDto;
 import ar.edu.unq.gurpo2.revistas.model.Revista;
 import ar.edu.unq.gurpo2.revistas.service.RevistaService;
-
+import jakarta.persistence.EntityNotFoundException;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -18,6 +18,7 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 
 @RestController
@@ -80,6 +81,20 @@ public class RevistaController {
         }
     }
   
+    @GetMapping("/{id}")
+    public ResponseEntity<Revista> getRevistaPorId(@PathVariable Integer id) {
+        try {
+            Optional<Revista> revistaOpt = revistaService.obtenerRevistaPorId(id);
+            if (revistaOpt.isPresent()) {
+                return ResponseEntity.ok(revistaOpt.get());
+            } else {
+                return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);
+            }
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(null);
+        }
+    }
+
     @PutMapping(value = "/{id}", consumes = "multipart/form-data")
     @PreAuthorize("hasAuthority('ADMIN_ROLE')")
     public ResponseEntity<?> actualizarRevista(
@@ -120,6 +135,30 @@ public class RevistaController {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Error al actualizar la revista: " + e.getMessage());
         }
     }
+    
+    @PutMapping("/suspender/{id}")
+    @PreAuthorize("hasAuthority('ADMIN_ROLE')")
+    public ResponseEntity<?> suspenderRevista(
+            @PathVariable Integer id,
+            @RequestBody Map<String, Integer> request) {
+        Integer diasSuspension = request.get("diasSuspension");
+
+        if (diasSuspension == null || diasSuspension <= 0) {
+            return ResponseEntity.badRequest().body("El número de días de suspensión debe ser mayor a 0.");
+        }
+
+        try {
+            Revista revista = revistaService.obtenerRevistaPorId(id)
+                    .orElseThrow(() -> new EntityNotFoundException("Revista no encontrada."));
+
+            // Simular la suspensión en memoria
+            return ResponseEntity.ok("La revista con ID " + id + " está suspendida por " + diasSuspension + " días.");
+        } catch (EntityNotFoundException e) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Revista no encontrada.");
+        }
+    }
+
+	
     @DeleteMapping("/{id}")
     public ResponseEntity<String> eliminarRevista(@PathVariable Integer id) {
         Optional<Revista> revistaExistenteOpt = revistaService.obtenerRevistaPorId(id);

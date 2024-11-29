@@ -1,8 +1,11 @@
 package ar.edu.unq.gurpo2.revistas.service;
 
+import ar.edu.unq.gurpo2.revistas.model.Estado;
 import ar.edu.unq.gurpo2.revistas.model.Revista;
 import ar.edu.unq.gurpo2.revistas.repository.RevistaRepository;
+import jakarta.persistence.EntityNotFoundException;
 
+import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
 
@@ -33,6 +36,19 @@ public class RevistaService {
     public void eliminarRevistaPorId(Integer id) {
         revistaRepository.deleteById(id);
     }
+    
+    public Revista suspenderRevista(int id, int diasSuspension) {
+        if (diasSuspension <= 0) {
+            throw new IllegalArgumentException("Los días de suspensión deben ser mayores a 0.");
+        }
 
+        Revista revista = revistaRepository.findById(id)
+            .orElseThrow(() -> new EntityNotFoundException("Revista no encontrada con el ID: " + id));
+
+        revista.setEstado(Estado.SUSPENDIDA); 
+
+        return revistaRepository.save(revista);
+    }
+    
 }
 

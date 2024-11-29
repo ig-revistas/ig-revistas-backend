@@ -3,6 +3,7 @@ package ar.edu.unq.gurpo2.revistas.dto;
 import java.io.Serializable;
 import java.time.LocalDate;
 
+import ar.edu.unq.gurpo2.revistas.model.Estado;
 import ar.edu.unq.gurpo2.revistas.model.Revista;
 
 public class RevistaDto implements Serializable {
@@ -14,7 +15,7 @@ public class RevistaDto implements Serializable {
 	 private LocalDate fechaPublicacion;
 	 private String categoria;
 	 private String editorial;
-	 private String estado;
+	 private Estado estado;
 	 private int cantidadDisponible;
 	 private String descripcion;
 	
@@ -74,10 +75,10 @@ public class RevistaDto implements Serializable {
 	public void setEditorial(String editorial) {
 		this.editorial = editorial;
 	}
-	public String getEstado() {
+	public Estado getEstado() {
 		return estado;
 	}
-	public void setEstado(String estado) {
+	public void setEstado(Estado estado) {
 		this.estado = estado;
 	}
 	public int getCantidadDisponible() {
