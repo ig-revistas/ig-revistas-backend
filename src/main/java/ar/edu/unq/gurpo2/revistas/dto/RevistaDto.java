@@ -2,8 +2,7 @@ package ar.edu.unq.gurpo2.revistas.dto;
 
 import java.io.Serializable;
 import java.time.LocalDate;
-
-
+import ar.edu.unq.gurpo2.revistas.model.Estado;
 import ar.edu.unq.gurpo2.revistas.model.Revista;
 
 public class RevistaDto implements Serializable {
@@ -16,7 +15,7 @@ public class RevistaDto implements Serializable {
     private LocalDate fechaPublicacion;
     private String categoria;
     private String editorial;
-    private String estado;
+    private Estado estado; 
     private int cantidadDisponible;
     private String descripcion;
     private String portadaUrl;
@@ -25,16 +24,16 @@ public class RevistaDto implements Serializable {
     }
 
     public RevistaDto(Revista revista) {
-        this.id                 = revista.getId(); 
-        this.titulo             = revista.getTitulo();
-        this.autor              = revista.getAutor();
-        this.fechaPublicacion   = revista.getFechaPublicacion();
-        this.categoria          = revista.getCategoria();
-        this.editorial          = revista.getEditorial();
-        this.estado             = revista.getEstado();
+        this.id = revista.getId(); 
+        this.titulo = revista.getTitulo();
+        this.autor = revista.getAutor();
+        this.fechaPublicacion = revista.getFechaPublicacion();
+        this.categoria = revista.getCategoria();
+        this.editorial = revista.getEditorial();
+        this.estado = revista.getEstado(); 
         this.cantidadDisponible = revista.getCantidadDisponible();
-        this.descripcion        = revista.getDescripcion();
-        this.portadaUrl         = revista.getPortadaUrl(); 
+        this.descripcion = revista.getDescripcion();
+        this.portadaUrl = revista.getPortadaUrl(); 
     }
 
     public Revista toEntity() {
@@ -45,7 +44,7 @@ public class RevistaDto implements Serializable {
         revista.setFechaPublicacion(this.fechaPublicacion);
         revista.setCategoria(this.categoria);
         revista.setEditorial(this.editorial);
-        revista.setEstado(this.estado);
+        revista.setEstado(this.estado);  
         revista.setCantidadDisponible(this.cantidadDisponible);
         revista.setDescripcion(this.descripcion);
 
@@ -100,11 +99,11 @@ public class RevistaDto implements Serializable {
         this.editorial = editorial;
     }
 
-    public String getEstado() {
+    public Estado getEstado() {
         return estado;
     }
 
-    public void setEstado(String estado) {
+    public void setEstado(Estado estado) {
         this.estado = estado;
     }
 
@@ -128,11 +127,11 @@ public class RevistaDto implements Serializable {
         return serialVersionUID;
     }
 
-	public String getPortadaUrl() {
-		return portadaUrl;
-	}
+    public String getPortadaUrl() {
+        return portadaUrl;
+    }
 
-	public void setPortadaUrl(String portadaUrl) {
-		this.portadaUrl = portadaUrl;
-	}
+    public void setPortadaUrl(String portadaUrl) {
+        this.portadaUrl = portadaUrl;
+    }
 }
