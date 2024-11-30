@@ -5,6 +5,8 @@ import ar.edu.unq.gurpo2.revistas.model.Estado;
 import ar.edu.unq.gurpo2.revistas.model.Revista;
 import ar.edu.unq.gurpo2.revistas.repository.RevistaRepository;
 import jakarta.persistence.EntityNotFoundException;
+import jakarta.transaction.Transactional;
+
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
@@ -29,9 +31,9 @@ public class RevistaService {
         return revistaRepository.findAll();
     }
 
-   
+    @Transactional
     public Optional<Revista> obtenerRevistaPorId(String id) {
-        return revistaRepository.findById(id);
+        return revistaRepository.findRevistaWithEstadoById(id);
     }
 
     
@@ -49,6 +51,7 @@ public class RevistaService {
         return this.revistaRepository.findById(id)
                 .orElseThrow(() -> new EntityNotFoundException("La revista no fue encontrada."));
     }
+    
     public Revista suspenderRevista(String id, int diasSuspension) {
         if (diasSuspension <= 0) {
             throw new IllegalArgumentException("Los días de suspensión deben ser mayores a 0.");

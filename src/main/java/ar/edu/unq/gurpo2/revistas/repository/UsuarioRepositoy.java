@@ -16,9 +16,9 @@ public interface UsuarioRepositoy extends JpaRepository<Usuario, String> {
 	@EntityGraph(attributePaths = "roles")
 	Optional<Usuario> findByEmail(String email);
 	
-	@EntityGraph(value = "UsarioConReservas",type = EntityGraph.EntityGraphType.LOAD)
+	@EntityGraph(value = "UsuarioConReservas", type = EntityGraph.EntityGraphType.LOAD)
 	Optional<Usuario> findUsuarioWithReservaById(String idUsuario);
-
+	
 	@EntityGraph(value ="UsuarioConRolesYReservas",type = EntityGraph.EntityGraphType.LOAD)
 	Optional<Usuario> findUsuarioWithRoleAndReservaById(String idUsuario);
 	

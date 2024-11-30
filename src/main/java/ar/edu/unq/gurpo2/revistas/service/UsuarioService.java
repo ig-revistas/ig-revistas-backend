@@ -91,11 +91,7 @@ public class UsuarioService implements UserDetailsService {
             actualizarUsuario(usuario);
         }
     }
-	
-    public Usuario obtenerUsuarioPorId(String usuarioId) {
-    	
-        return repository.findById(usuarioId).orElse(null);
-    }
+    
     @Transactional
     public List<Reserva> obtenerReservasDeUsuario(String usuarioId) {
         Usuario usuario = repository.findUsuarioWithReservaById(usuarioId)
@@ -105,6 +101,10 @@ public class UsuarioService implements UserDetailsService {
     @Transactional
 	public Optional<Usuario> getUsuarioConReservasById(String idUsuario) {
 		return this.repository.findUsuarioWithReservaById(idUsuario);
+	}
+    @Transactional
+    public Optional<Usuario> getUsuarioConReservasAndRolesById(String idUsuario) {
+		return this.repository.findUsuarioWithRoleAndReservaById(idUsuario);
 	}
 
 }

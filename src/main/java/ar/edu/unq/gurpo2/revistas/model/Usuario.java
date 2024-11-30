@@ -19,7 +19,7 @@ import java.util.List;
 @NamedEntityGraph(name="UsuarioConRoles",
 attributeNodes = @NamedAttributeNode("roles"))
 
-@NamedEntityGraph(name="UsarioConReservas",
+@NamedEntityGraph(name="UsuarioConReservas",
 attributeNodes = @NamedAttributeNode("reservas"))
 
 @NamedEntityGraph(name="UsuarioConRolesYReservas",
@@ -43,7 +43,7 @@ public class Usuario {
     private List<Rol> roles;
     
 	@OneToMany(mappedBy = "usuario", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
-	private List<Reserva> reservas = new ArrayList<>();//<- reservas aprovadas o en pendiente
+	private List<Reserva> reservas = new ArrayList<>();
 	
 	@Column(name = "portada_url")
     private String portadaUrl;
@@ -118,20 +118,5 @@ public class Usuario {
 			this.reservas.add(reserva);
 		}
 	}
-	public Boolean tieneRolo(String rol) {
-		return this.roles
-				   .stream()
-				   .map(r->r.getNombre())
-				   .anyMatch(n->n.equals(rol));
-	}
-	public void notificarPendiente(Reserva newReserva) {
-		if(this.tieneRolo("OPERADOR_ROLE")) {
-			System.out.println("Notificación: Nueva reserva pendiente para revisión. Detalles de la reserva: " + newReserva);
-		}
-	}
-//	public void eliminarRecervaRechazada(Reserva recerva) {
-//		 this.reservas= this.reservas.stream()
-//					 		.filter(r-> !r.equals(recerva))
-//					 		.collect(Collectors.toList());
-//	}
+
 }

@@ -5,6 +5,8 @@ import java.time.LocalDate;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 
+import ar.edu.unq.gurpo2.revistas.model.Estado;
+import ar.edu.unq.gurpo2.revistas.model.EstadoReserva;
 import ar.edu.unq.gurpo2.revistas.model.Reserva;
 
 public class ReservaDto implements Serializable {
@@ -22,11 +24,11 @@ public class ReservaDto implements Serializable {
     private LocalDate fechaPedirReserva;
     private LocalDate fechaAprobacion;
     private LocalDate fechaRechazo;
-    private String estado;
+    private EstadoReserva estado;
     
     private String mailUsuario;
     private String tituloRevista;
-    private String estadoRevista;
+    private Estado estadoRevista;
 
 
     public ReservaDto() {}
@@ -67,12 +69,12 @@ public class ReservaDto implements Serializable {
 	}
 
 
-	public String getEstadoRevista() {
+	public Estado getEstadoRevista() {
 		return estadoRevista;
 	}
 
 
-	public void setEstadoRevista(String estadoRevista) {
+	public void setEstadoRevista(Estado estadoRevista) {
 		this.estadoRevista = estadoRevista;
 	}
 
@@ -117,7 +119,7 @@ public class ReservaDto implements Serializable {
         this.fechaRechazo = fechaRechazo;
     }
 
-    public String getEstado() {
+    public EstadoReserva getEstado() {
         return estado;
     }
 
@@ -142,7 +144,7 @@ public class ReservaDto implements Serializable {
 	}
 
 
-	public void setEstado(String estado) {
+	public void setEstado(EstadoReserva estado) {
         this.estado = estado;
     }
 }

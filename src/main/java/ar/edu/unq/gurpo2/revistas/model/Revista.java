@@ -4,11 +4,15 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
 import jakarta.persistence.Enumerated;
 import jakarta.persistence.Id;
+import jakarta.persistence.NamedAttributeNode;
+import jakarta.persistence.NamedEntityGraph;
 import jakarta.persistence.Table;
 import java.util.UUID;
 import java.time.LocalDate;
 
 @Entity
+@NamedEntityGraph(name="RevistaWithEstdo",
+attributeNodes = @NamedAttributeNode("estado"))
 @Table(name = "Revista", schema = "revistas")
 public class Revista {
 

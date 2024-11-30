@@ -2,11 +2,11 @@ package ar.edu.unq.gurpo2.revistas.controller;
 
 import ar.edu.unq.gurpo2.revistas.dto.RevistaDto;
 
-import ar.edu.unq.gurpo2.revistas.dto.RevistaInfDto;
+
 import ar.edu.unq.gurpo2.revistas.model.Revista;
 import ar.edu.unq.gurpo2.revistas.service.RevistaService;
 import jakarta.persistence.EntityNotFoundException;
-import jakarta.transaction.Transactional;
+
 
 
 import org.springframework.beans.factory.annotation.Autowired;

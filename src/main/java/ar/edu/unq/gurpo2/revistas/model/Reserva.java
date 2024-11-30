@@ -4,6 +4,8 @@ import java.time.LocalDate;
 
 
 import jakarta.persistence.Entity;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
@@ -24,6 +26,7 @@ import jakarta.persistence.Table;
         @NamedAttributeNode("usuario"),
         @NamedAttributeNode("revista")
     })
+
 @Table(name = "Reserva", schema = "revistas")
 public class Reserva {
 
@@ -44,12 +47,12 @@ public class Reserva {
 	private LocalDate fechaPedirReserva;
 	private LocalDate fechaAprobacion;
 	private LocalDate fechaRechazo;
-	
-	private String estado;
+	@Enumerated(EnumType.STRING)
+	private EstadoReserva estado;
 	public Reserva() {
 	}
 
-	public Reserva(Integer tiempoVigente, Usuario usuario, Revista revista ,String estado) {
+	public Reserva(Integer tiempoVigente, Usuario usuario, Revista revista ,EstadoReserva estado) {
 		this.tiempoVigente = tiempoVigente;
 		this.usuario = usuario;
 		this.revista = revista;
@@ -115,11 +118,11 @@ public class Reserva {
 		this.fechaRechazo = fechaRechazo;
 	}
 
-	public String getEstado() {
+	public EstadoReserva getEstado() {
 		return estado;
 	}
 
-	public void setEstado(String estado) {
+	public void setEstado(EstadoReserva estado) {
 		this.estado = estado;
 	}
 	

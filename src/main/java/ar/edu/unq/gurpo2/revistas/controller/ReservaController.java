@@ -13,6 +13,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import ar.edu.unq.gurpo2.revistas.dto.ReservaDto;
+import ar.edu.unq.gurpo2.revistas.model.Estado;
+import ar.edu.unq.gurpo2.revistas.model.EstadoReserva;
 import ar.edu.unq.gurpo2.revistas.model.Reserva;
 import ar.edu.unq.gurpo2.revistas.model.Revista;
 import ar.edu.unq.gurpo2.revistas.model.Usuario;
@@ -50,7 +52,7 @@ public class ReservaController {
         }
         
         Optional<Usuario> opcionalUsuario = usuarioService.getUsuarioConReservasById(reservaDto.getIdUsuario());
-        Optional<Revista> opcionalRevista = revistaService.getRevistaById(reservaDto.getIdRevista());
+        Optional<Revista> opcionalRevista = revistaService.obtenerRevistaPorId(reservaDto.getIdRevista());
         
         if(!opcionalRevista.isPresent()) {
         	return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Revista no encotrada.");
@@ -65,14 +67,14 @@ public class ReservaController {
         if (revista.getCantidadDisponible() == 0) {
             return ResponseEntity.status(HttpStatus.CONFLICT).body("No hay revistas disponibles.");
         }
-        if (!revista.getEstado().equals("DISPONIBLE")) {
+        if (!revista.getEstado().equals(Estado.DISPONIBLE)) {
         	return ResponseEntity.status(HttpStatus.CONFLICT).body("La revista no esta disponible para reservar.");
         }
         if (!usuario.puedeReservar()) {
             return ResponseEntity.status(HttpStatus.CONFLICT).body("Usuario " + usuario.getNombre() + " ya tiene 3 reservas actualmente.");
         }
 
-        if (reservaService.existeReserva(reservaDto.getIdUsuario(), reservaDto.getIdRevista())) {
+        if (reservaService.existeReservaYNoEsRechazada(reservaDto.getIdUsuario(), reservaDto.getIdRevista())) {
             return ResponseEntity.status(HttpStatus.CONFLICT).body("Ya existe una reserva para esta revista y usuario.");
         }
 
@@ -80,13 +82,11 @@ public class ReservaController {
         newReserva.setRevista(revista);
         newReserva.setUsuario(usuario);
         newReserva.setFechaPedirReserva(LocalDate.now());
-        newReserva.setEstado("PENDIENTE");
+        newReserva.setEstado(EstadoReserva.PENDIENTE);
         
         String responseMessage = this.reservaService.addReserva(newReserva);
 
         revista.tomarUnaRevista();
-        	
-        this.usuarioService.getAllUsuariosOperador().forEach(op -> op.notificarPendiente(newReserva));
 
         return ResponseEntity.status(HttpStatus.CREATED).body(responseMessage);
     }
@@ -108,7 +108,7 @@ public class ReservaController {
 
     @PreAuthorize("hasAuthority('OPERADOR_ROLE')")
     @PutMapping("/rechazar/{idReserva}")
-    public ResponseEntity<String> rechazarReserva(@PathVariable String idReserva) {
+    public synchronized ResponseEntity<String> rechazarReserva(@PathVariable String idReserva) {
 
         Optional<Reserva> optionalReserva = this.reservaService.getReservaById(idReserva);
 
@@ -123,7 +123,7 @@ public class ReservaController {
 
     @PreAuthorize("hasAuthority('OPERADOR_ROLE')")
     @GetMapping("/todas")
-    public List<ReservaDto> todasLasReservas() {
+    public synchronized List<ReservaDto> todasLasReservas() {
         List<Reserva> reservas = this.reservaService.getAllReserva();
         return reservas.stream().map(reserva -> new ReservaDto(reserva)).collect(Collectors.toList());
     }
@@ -138,14 +138,21 @@ public class ReservaController {
     
     @GetMapping("/usuario/{usuarioId}")
     public ResponseEntity<List<ReservaDto>> obtenerReservas(@PathVariable String usuarioId) {
-        Usuario usuario = usuarioService.obtenerUsuarioPorId(usuarioId);
-        if (usuario == null) {
+        Optional<Usuario> optionalUsuario = usuarioService.getUsuarioConReservasById(usuarioId);
+        
+        if (!optionalUsuario.isPresent()) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);
         }
-        List<Reserva> reservas = usuarioService.obtenerReservasDeUsuario(usuarioId);
-        List<ReservaDto> reservasDto = reservas.stream()
-            .map(ReservaDto::new)
-            .collect(Collectors.toList());
+        
+        Usuario usuario = optionalUsuario.get();
+        List<Reserva> reservas = usuario.getReservas();
+        System.err.println("reservas: "+reservas.stream().map(r->r.getId()).collect(Collectors.toList()));
+        if (reservas.isEmpty()) {
+            return ResponseEntity.ok(null);
+        }
+        
+        List<ReservaDto> reservasDto = reservas.stream().map(reserva -> new ReservaDto(reserva)).collect(Collectors.toList());
+        
         return ResponseEntity.ok(reservasDto);
     }
 

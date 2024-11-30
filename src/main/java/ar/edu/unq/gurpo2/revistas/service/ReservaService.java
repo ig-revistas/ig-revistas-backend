@@ -8,7 +8,8 @@ import java.util.UUID;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-
+import ar.edu.unq.gurpo2.revistas.model.Estado;
+import ar.edu.unq.gurpo2.revistas.model.EstadoReserva;
 import ar.edu.unq.gurpo2.revistas.model.Reserva;
 import ar.edu.unq.gurpo2.revistas.model.Revista;
 import ar.edu.unq.gurpo2.revistas.repository.ReservaRepository;
@@ -37,15 +38,15 @@ public class ReservaService {
 		return "Se agrego con exito";
 	}
 	@Transactional
-	public boolean existeReserva(String idUsuario, String string) {
-	    return reservaRepository.existsByUsuarioIdAndRevistaId(idUsuario, string);
+	public boolean existeReservaYNoEsRechazada(String idUsuario, String idReserva) {
+	    return reservaRepository.existsByUsuarioIdAndRevistaIdAndEstadoNot(idUsuario, idReserva, EstadoReserva.RECHAZADA);
 	}
 	public Optional<Reserva> getReservaById(String idReserva) {
 		return reservaRepository.findById(idReserva);
 	}
 	@Transactional
 	public String aprobarReserva(Reserva reserva, Integer tiempoVigente) {
-		reserva.setEstado("APROBADA");
+		reserva.setEstado(EstadoReserva.APROBADA);
 		reserva.setTiempoVigente(tiempoVigente);
 		reserva.setFechaAprobacion(LocalDate.now());
 		
@@ -55,10 +56,8 @@ public class ReservaService {
 		}
 		optionalRevista.get().tomarUnaRevista();
 		if(optionalRevista.get().getCantidadDisponible()<1) {
-		optionalRevista.get().setEstado("AGOTADA");
+		optionalRevista.get().setEstado(Estado.AGOTADA);
 		}
-		
-		
 		reservaRepository.save(reserva);
         return "Reserva aprobada exitosamente.";
 		
@@ -66,7 +65,7 @@ public class ReservaService {
 
 	@Transactional
 	public String rechazarReserva(Reserva reserva) {
-		reserva.setEstado("RECHAZADA");
+		reserva.setEstado(EstadoReserva.RECHAZADA);
 		reserva.setFechaRechazo(LocalDate.now());
 		reservaRepository.save(reserva);
 		
@@ -78,7 +77,7 @@ public class ReservaService {
 	}
 	@Transactional
 	public List<Reserva> getAllReservaPendiente() {
-		return  this.reservaRepository.findReservasWithRevistaAndUsuarioByEstado("PENDIENTE");
+		return  this.reservaRepository.findReservasWithRevistaAndUsuarioByEstado(EstadoReserva.PENDIENTE);
 	}
 	
 }
