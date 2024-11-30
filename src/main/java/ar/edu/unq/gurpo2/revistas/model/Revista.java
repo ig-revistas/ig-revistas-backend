@@ -111,7 +111,6 @@ public class Revista {
 
 
 	public void tomarUnaRevista() {
-		// TODO Auto-generated method stub
-		
+		this.cantidadDisponible--;
 	}
 }

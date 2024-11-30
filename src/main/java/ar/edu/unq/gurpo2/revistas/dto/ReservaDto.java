@@ -9,20 +9,24 @@ import ar.edu.unq.gurpo2.revistas.model.Reserva;
 
 public class ReservaDto implements Serializable {
     private static final long serialVersionUID = 1L;
-
+    
+    private String id;
+    
     @JsonProperty("usuario")
     private String idUsuario;
 
     @JsonProperty("revista")
-    private RevistaDto revista;
+    private String idRevista;
 
     private Integer tiempoVigente;
     private LocalDate fechaPedirReserva;
     private LocalDate fechaAprobacion;
     private LocalDate fechaRechazo;
     private String estado;
-
-    private String idRevista;
+    
+    private String mailUsuario;
+    private String tituloRevista;
+    private String estadoRevista;
 
 
     public ReservaDto() {}
@@ -30,30 +34,55 @@ public class ReservaDto implements Serializable {
    
     public ReservaDto(Reserva reserva) {
         this.idUsuario = reserva.getUsuario().getId();
-        this.revista = new RevistaDto(reserva.getRevista());
+        this.idRevista = reserva.getRevista().getId();
         this.tiempoVigente = reserva.getTiempoVigente();
         this.fechaAprobacion = reserva.getFechaAprobacion();
         this.fechaPedirReserva = reserva.getFechaPedirReserva();
         this.fechaRechazo = reserva.getFechaRechazo();
         this.estado = reserva.getEstado();
-        this.idRevista = reserva.getRevista().getId(); 
+        this.id = reserva.getId(); 
+        this.mailUsuario = reserva.getUsuario().getEmail();
+        this.tituloRevista = reserva.getRevista().getTitulo();
+        this.estadoRevista = reserva.getRevista().getEstado();
     }
 
+    
+    public String getMailUsuario() {
+		return mailUsuario;
+	}
 
-    public String getIdUsuario() {
+
+	public void setMailUsuario(String mailUsuario) {
+		this.mailUsuario = mailUsuario;
+	}
+
+
+	public String getTituloRevista() {
+		return tituloRevista;
+	}
+
+
+	public void setTituloRevista(String tituloRevista) {
+		this.tituloRevista = tituloRevista;
+	}
+
+
+	public String getEstadoRevista() {
+		return estadoRevista;
+	}
+
+
+	public void setEstadoRevista(String estadoRevista) {
+		this.estadoRevista = estadoRevista;
+	}
+
+
+	public String getIdUsuario() {
         return idUsuario;
     }
 
     public void setIdUsuario(String idUsuario) {
         this.idUsuario = idUsuario;
-    }
-
-    public String getIdRevista() {
-        return idRevista;
-    }
-
-    public void setIdRevista(String idRevista) {
-        this.idRevista = idRevista;
     }
 
     public Integer getTiempoVigente() {
@@ -92,7 +121,28 @@ public class ReservaDto implements Serializable {
         return estado;
     }
 
-    public void setEstado(String estado) {
+
+	public String getId() {
+		return id;
+	}
+
+
+	public void setId(String id) {
+		this.id = id;
+	}
+
+
+	public String getIdRevista() {
+		return idRevista;
+	}
+
+
+	public void setIdRevista(String idRevista) {
+		this.idRevista = idRevista;
+	}
+
+
+	public void setEstado(String estado) {
         this.estado = estado;
     }
 }

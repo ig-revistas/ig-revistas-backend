@@ -20,6 +20,7 @@ import ar.edu.unq.gurpo2.revistas.repository.RolRepository;
 import ar.edu.unq.gurpo2.revistas.repository.UsuarioRepositoy;
 import ar.edu.unq.gurpo2.revistas.security.UserInfoDetails;
 import jakarta.persistence.EntityNotFoundException;
+import jakarta.transaction.Transactional;
 
 
 @Service
@@ -63,16 +64,12 @@ public class UsuarioService implements UserDetailsService {
 
 		return "User Added Successfully";
 	}
-
+	@Transactional
 	public Usuario getUsuarioById(String id) {
-
-		return this.repository.findById(id)
+		return this.repository.findUsuarioById(id)
 				.orElseThrow(() -> new EntityNotFoundException("El usuario no fue encontrado."));
 	}
-
 	
-
-
 	public ArrayList<Usuario> getAllUsuariosOperador() {
 		return this.repository
 				   .findAll()
@@ -99,10 +96,15 @@ public class UsuarioService implements UserDetailsService {
     	
         return repository.findById(usuarioId).orElse(null);
     }
+    @Transactional
     public List<Reserva> obtenerReservasDeUsuario(String usuarioId) {
-        Usuario usuario = repository.findById(usuarioId)
+        Usuario usuario = repository.findUsuarioWithReservaById(usuarioId)
             .orElseThrow(() -> new EntityNotFoundException("Usuario no encontrado"));
         return usuario.getReservas(); 
     }
+    @Transactional
+	public Optional<Usuario> getUsuarioConReservasById(String idUsuario) {
+		return this.repository.findUsuarioWithReservaById(idUsuario);
+	}
 
 }

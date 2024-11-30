@@ -2,6 +2,8 @@ package ar.edu.unq.gurpo2.revistas.dto;
 
 import java.io.Serializable;
 import java.time.LocalDate;
+
+
 import ar.edu.unq.gurpo2.revistas.model.Revista;
 
 public class RevistaDto implements Serializable {

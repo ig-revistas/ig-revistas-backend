@@ -3,6 +3,8 @@ package ar.edu.unq.gurpo2.revistas.service;
 import ar.edu.unq.gurpo2.revistas.model.Revista;
 import ar.edu.unq.gurpo2.revistas.repository.RevistaRepository;
 import jakarta.persistence.EntityNotFoundException;
+import jakarta.transaction.Transactional;
+
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
@@ -43,8 +45,7 @@ public class RevistaService {
     }
 
     
-    public Revista getRevistaById(String id) {
-        return this.revistaRepository.findById(id)
-                .orElseThrow(() -> new EntityNotFoundException("La revista no fue encontrada."));
+    public Optional<Revista> getRevistaById(String id) {
+        return this.revistaRepository.findRevistaById(id);
     }
 }
