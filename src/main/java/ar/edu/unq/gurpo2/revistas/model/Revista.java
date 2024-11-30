@@ -1,6 +1,8 @@
 package ar.edu.unq.gurpo2.revistas.model;
 
 import jakarta.persistence.Entity;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
 import jakarta.persistence.Id;
 import jakarta.persistence.Table;
 import java.util.UUID;
@@ -18,10 +20,13 @@ public class Revista {
     private LocalDate fechaPublicacion;
     private String categoria;
     private String editorial;
-    private String estado;
     private int cantidadDisponible;
     private String descripcion;
     private String portadaUrl;
+    
+    @Enumerated(EnumType.STRING)
+    private Estado estado;
+    
 
     public Revista() {
         this.id = UUID.randomUUID().toString(); 
@@ -77,11 +82,11 @@ public class Revista {
         this.editorial = editorial;
     }
 
-    public String getEstado() {
+    public Estado getEstado() {
         return estado;
     }
 
-    public void setEstado(String estado) {
+    public void setEstado(Estado estado) {
         this.estado = estado;
     }
 
