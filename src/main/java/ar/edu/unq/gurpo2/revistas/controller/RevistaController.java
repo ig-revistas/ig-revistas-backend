@@ -2,9 +2,7 @@ package ar.edu.unq.gurpo2.revistas.controller;
 
 import ar.edu.unq.gurpo2.revistas.dto.RevistaDto;
 import ar.edu.unq.gurpo2.revistas.dto.RevistaInfDto;
-import ar.edu.unq.gurpo2.revistas.dto.UsuarioDto;
 import ar.edu.unq.gurpo2.revistas.model.Revista;
-import ar.edu.unq.gurpo2.revistas.model.Usuario;
 import ar.edu.unq.gurpo2.revistas.service.RevistaService;
 import jakarta.persistence.EntityNotFoundException;
 import jakarta.transaction.Transactional;
@@ -93,6 +91,7 @@ public class RevistaController {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(null);
         }
     }
+	
     @GetMapping("/uploads/{filename:.+}")
     public ResponseEntity<byte[]> getImage(@PathVariable String filename) {
         try {
@@ -109,20 +108,6 @@ public class RevistaController {
         }
     }
   
-    @GetMapping("/{id}")
-    public ResponseEntity<Revista> getRevistaPorId(@PathVariable Integer id) {
-        try {
-            Optional<Revista> revistaOpt = revistaService.obtenerRevistaPorId(id);
-            if (revistaOpt.isPresent()) {
-                return ResponseEntity.ok(revistaOpt.get());
-            } else {
-                return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);
-            }
-        } catch (Exception e) {
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(null);
-        }
-    }
-
     @PutMapping(value = "/{id}", consumes = "multipart/form-data")
     @PreAuthorize("hasAuthority('ADMIN_ROLE')")
     public ResponseEntity<?> actualizarRevista(
@@ -167,7 +152,7 @@ public class RevistaController {
     @PutMapping("/suspender/{id}")
     @PreAuthorize("hasAuthority('ADMIN_ROLE')")
     public ResponseEntity<?> suspenderRevista(
-            @PathVariable Integer id,
+            @PathVariable String id,
             @RequestBody Map<String, Integer> request) {
         Integer diasSuspension = request.get("diasSuspension");
 
@@ -212,16 +197,4 @@ public class RevistaController {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Revista no encontrada");
         }
     }
-    @Transactional
-    @GetMapping("/{idRevista}")
-    public ResponseEntity<RevistaInfDto> getRevista(@PathVariable String idRevista) {
-    	if (idRevista == null || idRevista.isEmpty()) {
-            throw new IllegalArgumentException("El idRevista no puede ser nulo ni vacío");
-        }
-        Revista revista = this.revistaService.getRevistaById(idRevista);
-        RevistaInfDto revistaInfoDto = new RevistaInfDto(revista);
-        return ResponseEntity.ok(revistaInfoDto);
-    }
-    
-
 }
