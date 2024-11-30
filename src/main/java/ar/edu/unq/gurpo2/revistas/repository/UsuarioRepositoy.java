@@ -10,12 +10,16 @@ import ar.edu.unq.gurpo2.revistas.model.Usuario;
 
 @Repository
 public interface UsuarioRepositoy extends JpaRepository<Usuario, String> {
-
+	
+	Optional<Usuario> findUsuarioById(String id);
+	
 	@EntityGraph(attributePaths = "roles")
 	Optional<Usuario> findByEmail(String email);
+	
+	@EntityGraph(value = "UsarioConReservas",type = EntityGraph.EntityGraphType.LOAD)
+	Optional<Usuario> findUsuarioWithReservaById(String idUsuario);
 
-	@EntityGraph(attributePaths = {"reservas", "reservas.revista"})
-
-	Optional<Usuario> findById(String id);
+	@EntityGraph(value ="UsuarioConRolesYReservas",type = EntityGraph.EntityGraphType.LOAD)
+	Optional<Usuario> findUsuarioWithRoleAndReservaById(String idUsuario);
 	
 }

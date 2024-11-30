@@ -1,11 +1,13 @@
 package ar.edu.unq.gurpo2.revistas.controller;
 
 import ar.edu.unq.gurpo2.revistas.dto.RevistaDto;
+
 import ar.edu.unq.gurpo2.revistas.dto.RevistaInfDto;
 import ar.edu.unq.gurpo2.revistas.model.Revista;
 import ar.edu.unq.gurpo2.revistas.service.RevistaService;
 import jakarta.persistence.EntityNotFoundException;
 import jakarta.transaction.Transactional;
+
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -40,16 +42,25 @@ public class RevistaController {
 	public ResponseEntity<?> crearRevista(
 	        @Validated @RequestPart("revista") RevistaDto nuevaRevistaDto,
 	        @RequestPart("portada") MultipartFile portada) {
+		
+		System.err.println(nuevaRevistaDto.getCantidadDisponible());
+        System.err.println(nuevaRevistaDto.getFechaPublicacion());
 	    try {
 	        String originalFilename = portada.getOriginalFilename();
 	        Path path = Paths.get(UPLOAD_DIR + originalFilename);
 	        Files.createDirectories(path.getParent());
 	        Files.write(path, portada.getBytes());
 	        Revista nuevaRevista = nuevaRevistaDto.toEntity();
+	        
+	        nuevaRevista.setPortadaUrl("/uploads/" + originalFilename);
+	        if(nuevaRevistaDto.getCantidadDisponible()==0) {
+	        	return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("La cantidad disponible de una revista nueva no puede ser 0.");
+	        }
+	        if(nuevaRevistaDto.getFechaPublicacion().equals(null)) {
+	        	return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("La fecha de publicacion no puede ser nula.");
+	        }
 	        nuevaRevista.setFechaPublicacion(nuevaRevistaDto.getFechaPublicacion());
 	        nuevaRevista.setCantidadDisponible(nuevaRevistaDto.getCantidadDisponible());
-	        nuevaRevista.setPortadaUrl("/uploads/" + originalFilename);
-	       
 	        Revista revistaCreada = revistaService.crearRevista(nuevaRevista);
 
 	
@@ -197,4 +208,5 @@ public class RevistaController {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Revista no encontrada");
         }
     }
+
 }

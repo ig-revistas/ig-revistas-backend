@@ -23,16 +23,14 @@ import org.springframework.web.multipart.MultipartFile;
 
 import ar.edu.unq.gurpo2.revistas.dto.UserAuthDto;
 import ar.edu.unq.gurpo2.revistas.dto.UsuarioDto;
-import ar.edu.unq.gurpo2.revistas.dto.UsuarioInfDto;
 import ar.edu.unq.gurpo2.revistas.model.Usuario;
 import ar.edu.unq.gurpo2.revistas.request.AuthRequest;
 import ar.edu.unq.gurpo2.revistas.security.UserInfoDetails;
 import ar.edu.unq.gurpo2.revistas.service.JwtService;
 import ar.edu.unq.gurpo2.revistas.service.UsuarioService;
 import io.jsonwebtoken.io.IOException;
-import jakarta.transaction.Transactional;
 
-import org.springframework.web.bind.annotation.RequestParam;
+
 
 
 
@@ -140,16 +138,8 @@ public class UserController {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(null);
         }
     }
-    @Transactional
-    @GetMapping("/usuario/{idUsuario}")
-    public ResponseEntity<UsuarioInfDto> getUsuario(@PathVariable String idUsuario) {
-        if (idUsuario == null || idUsuario.isEmpty()) {
-            throw new IllegalArgumentException("El idUsuario no puede ser nulo ni vacío");
-        }
-        Usuario usuario = this.usuarioService.getUsuarioById(idUsuario);
-        UsuarioInfDto usuarioInfoDto = new UsuarioInfDto(usuario);
-        return ResponseEntity.ok(usuarioInfoDto);
-    }
+
+   
     
 }
 

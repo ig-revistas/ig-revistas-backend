@@ -7,14 +7,25 @@ import jakarta.persistence.FetchType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinTable;
 import jakarta.persistence.ManyToMany;
+import jakarta.persistence.NamedAttributeNode;
+import jakarta.persistence.NamedEntityGraph;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
 import jakarta.persistence.JoinColumn;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.stream.Collectors;
 
 @Entity
+@NamedEntityGraph(name="UsuarioConRoles",
+attributeNodes = @NamedAttributeNode("roles"))
+
+@NamedEntityGraph(name="UsarioConReservas",
+attributeNodes = @NamedAttributeNode("reservas"))
+
+@NamedEntityGraph(name="UsuarioConRolesYReservas",
+attributeNodes = { @NamedAttributeNode("roles"),
+		@NamedAttributeNode("reservas")})
+
 @Table(name = "Usuario", schema = "revistas")
 public class Usuario {
     @Id
@@ -30,6 +41,7 @@ public class Usuario {
         inverseJoinColumns = @JoinColumn(name = "id_rol")
     )
     private List<Rol> roles;
+    
 	@OneToMany(mappedBy = "usuario", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
 	private List<Reserva> reservas = new ArrayList<>();//<- reservas aprovadas o en pendiente
 	

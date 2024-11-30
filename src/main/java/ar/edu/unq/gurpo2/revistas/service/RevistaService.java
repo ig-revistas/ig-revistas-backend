@@ -1,3 +1,4 @@
+
 package ar.edu.unq.gurpo2.revistas.service;
 
 import ar.edu.unq.gurpo2.revistas.model.Estado;
@@ -62,3 +63,4 @@ public class RevistaService {
     }
     
 }
+
