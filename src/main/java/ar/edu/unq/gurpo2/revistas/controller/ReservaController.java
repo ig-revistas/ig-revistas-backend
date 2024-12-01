@@ -125,7 +125,7 @@ public class ReservaController {
     @GetMapping("/todas")
     public synchronized List<ReservaDto> todasLasReservas() {
         List<Reserva> reservas = this.reservaService.getAllReserva();
-        return reservas.stream().map(reserva -> new ReservaDto(reserva)).collect(Collectors.toList());
+        return this.mapearAReservaDto(reservas);
     }
 
     
@@ -133,27 +133,18 @@ public class ReservaController {
     @GetMapping("/todasLasPendientes")
     public List<ReservaDto> todasLasReservasPendientes() {
         List<Reserva> reservas = this.reservaService.getAllReservaPendiente();
-        return reservas.stream().map(reserva -> new ReservaDto(reserva)).collect(Collectors.toList());
+        return this.mapearAReservaDto(reservas);
     }
     
-    @GetMapping("/usuario/{usuarioId}")
-    public ResponseEntity<List<ReservaDto>> obtenerReservas(@PathVariable String usuarioId) {
-        Optional<Usuario> optionalUsuario = usuarioService.getUsuarioConReservasById(usuarioId);
+
+    @GetMapping("/usuario/{id}")
+    public ResponseEntity<List<ReservaDto>> obtenerReserva(@PathVariable String id) {
+    	ResponseEntity<List<ReservaDto>> reservasDto = reservaService.obtenerReservasPorUsuario(id);
+        return reservasDto;
+    }
+    private List<ReservaDto> mapearAReservaDto(List<Reserva> reservas){
+    	return reservas.stream().map(reserva -> new ReservaDto(reserva)).collect(Collectors.toList());
         
-        if (!optionalUsuario.isPresent()) {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);
-        }
-        
-        Usuario usuario = optionalUsuario.get();
-        List<Reserva> reservas = usuario.getReservas();
-        System.err.println("reservas: "+reservas.stream().map(r->r.getId()).collect(Collectors.toList()));
-        if (reservas.isEmpty()) {
-            return ResponseEntity.ok(null);
-        }
-        
-        List<ReservaDto> reservasDto = reservas.stream().map(reserva -> new ReservaDto(reserva)).collect(Collectors.toList());
-        
-        return ResponseEntity.ok(reservasDto);
     }
 
 

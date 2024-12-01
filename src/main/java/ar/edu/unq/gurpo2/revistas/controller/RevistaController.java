@@ -42,9 +42,6 @@ public class RevistaController {
 	public ResponseEntity<?> crearRevista(
 	        @Validated @RequestPart("revista") RevistaDto nuevaRevistaDto,
 	        @RequestPart("portada") MultipartFile portada) {
-		
-		System.err.println(nuevaRevistaDto.getCantidadDisponible());
-        System.err.println(nuevaRevistaDto.getFechaPublicacion());
 	    try {
 	        String originalFilename = portada.getOriginalFilename();
 	        Path path = Paths.get(UPLOAD_DIR + originalFilename);

@@ -28,5 +28,7 @@ public interface ReservaRepository extends JpaRepository<Reserva, String> {
 
 	boolean existsByUsuarioIdAndRevistaIdAndEstadoNot(String idUsuario, String idReserva, EstadoReserva estado);
 	
+	@EntityGraph(value = "UsuarioConReservasConRevistaYUsuario", type = EntityGraph.EntityGraphType.LOAD)
+	List<Reserva> findByUsuarioId(String idUsuario);
 
 }

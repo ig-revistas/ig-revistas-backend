@@ -92,12 +92,7 @@ public class UsuarioService implements UserDetailsService {
         }
     }
     
-    @Transactional
-    public List<Reserva> obtenerReservasDeUsuario(String usuarioId) {
-        Usuario usuario = repository.findUsuarioWithReservaById(usuarioId)
-            .orElseThrow(() -> new EntityNotFoundException("Usuario no encontrado"));
-        return usuario.getReservas(); 
-    }
+    
     @Transactional
 	public Optional<Usuario> getUsuarioConReservasById(String idUsuario) {
 		return this.repository.findUsuarioWithReservaById(idUsuario);

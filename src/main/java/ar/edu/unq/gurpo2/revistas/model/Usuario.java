@@ -9,6 +9,7 @@ import jakarta.persistence.JoinTable;
 import jakarta.persistence.ManyToMany;
 import jakarta.persistence.NamedAttributeNode;
 import jakarta.persistence.NamedEntityGraph;
+import jakarta.persistence.NamedSubgraph;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
 import jakarta.persistence.JoinColumn;
@@ -26,6 +27,10 @@ attributeNodes = @NamedAttributeNode("reservas"))
 attributeNodes = { @NamedAttributeNode("roles"),
 		@NamedAttributeNode("reservas")})
 
+@NamedEntityGraph(
+	    name = "UsuarioConReservasConRevistaYUsuario",
+	    attributeNodes = @NamedAttributeNode(value = "reservas", subgraph = "ReservaWithRevistaAndUsuario")
+	)
 @Table(name = "Usuario", schema = "revistas")
 public class Usuario {
     @Id

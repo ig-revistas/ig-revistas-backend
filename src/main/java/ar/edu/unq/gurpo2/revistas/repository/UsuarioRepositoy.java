@@ -22,4 +22,6 @@ public interface UsuarioRepositoy extends JpaRepository<Usuario, String> {
 	@EntityGraph(value ="UsuarioConRolesYReservas",type = EntityGraph.EntityGraphType.LOAD)
 	Optional<Usuario> findUsuarioWithRoleAndReservaById(String idUsuario);
 	
+	@EntityGraph(value = "UsuarioConReservasConRevistaYUsuario",type = EntityGraph.EntityGraphType.LOAD)
+	Optional<Usuario> findUsuarioWithReservaWithRevistaAndUsuarioById(String idUsuario);
 }

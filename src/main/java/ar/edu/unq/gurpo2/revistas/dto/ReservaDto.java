@@ -35,6 +35,7 @@ public class ReservaDto implements Serializable {
 
    
     public ReservaDto(Reserva reserva) {
+       
         this.idUsuario = reserva.getUsuario().getId();
         this.idRevista = reserva.getRevista().getId();
         this.tiempoVigente = reserva.getTiempoVigente();

@@ -4,14 +4,18 @@ import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
+import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
+import ar.edu.unq.gurpo2.revistas.dto.ReservaDto;
 import ar.edu.unq.gurpo2.revistas.model.Estado;
 import ar.edu.unq.gurpo2.revistas.model.EstadoReserva;
 import ar.edu.unq.gurpo2.revistas.model.Reserva;
 import ar.edu.unq.gurpo2.revistas.model.Revista;
+import ar.edu.unq.gurpo2.revistas.model.Usuario;
 import ar.edu.unq.gurpo2.revistas.repository.ReservaRepository;
 import ar.edu.unq.gurpo2.revistas.repository.RevistaRepository;
 import jakarta.transaction.Transactional;
@@ -78,6 +82,14 @@ public class ReservaService {
 	@Transactional
 	public List<Reserva> getAllReservaPendiente() {
 		return  this.reservaRepository.findReservasWithRevistaAndUsuarioByEstado(EstadoReserva.PENDIENTE);
+	}
+	
+	@Transactional
+	public ResponseEntity<List<ReservaDto>> obtenerReservasPorUsuario(String idUsuario) {
+		List<Reserva> reservas = reservaRepository.findByUsuarioId(idUsuario);
+		ResponseEntity<List<ReservaDto>> mensajeReserva = ResponseEntity.ok(reservas.stream().map(ReservaDto::new).collect(Collectors.toList()));
+	
+		return mensajeReserva;
 	}
 	
 }
