@@ -172,7 +172,7 @@ public class RevistaController {
             Revista revista = revistaService.obtenerRevistaPorId(id)
                     .orElseThrow(() -> new EntityNotFoundException("Revista no encontrada."));
 
-            // Simular la suspensión en memoria
+            revistaService.suspenderRevista(id, diasSuspension);
             return ResponseEntity.ok("La revista con ID " + id + " está suspendida por " + diasSuspension + " días.");
         } catch (EntityNotFoundException e) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Revista no encontrada.");
