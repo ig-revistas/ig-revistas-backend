@@ -25,7 +25,7 @@ public class ReservaDto implements Serializable {
     private LocalDate fechaAprobacion;
     private LocalDate fechaRechazo;
     private EstadoReserva estado;
-    
+    private String portadaRevista;
     private String mailUsuario;
     private String tituloRevista;
     private Estado estadoRevista;
@@ -47,6 +47,7 @@ public class ReservaDto implements Serializable {
         this.mailUsuario = reserva.getUsuario().getEmail();
         this.tituloRevista = reserva.getRevista().getTitulo();
         this.estadoRevista = reserva.getRevista().getEstado();
+        this.setPortadaRevista(reserva.getRevista().getPortadaUrl());
     }
 
     
@@ -148,4 +149,14 @@ public class ReservaDto implements Serializable {
 	public void setEstado(EstadoReserva estado) {
         this.estado = estado;
     }
+
+
+	public String getPortadaRevista() {
+		return portadaRevista;
+	}
+
+
+	public void setPortadaRevista(String portadaRevista) {
+		this.portadaRevista = portadaRevista;
+	}
 }
