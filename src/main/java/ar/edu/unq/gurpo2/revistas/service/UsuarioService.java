@@ -13,7 +13,6 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
-import ar.edu.unq.gurpo2.revistas.model.Reserva;
 import ar.edu.unq.gurpo2.revistas.model.Rol;
 import ar.edu.unq.gurpo2.revistas.model.Usuario;
 import ar.edu.unq.gurpo2.revistas.repository.RolRepository;
