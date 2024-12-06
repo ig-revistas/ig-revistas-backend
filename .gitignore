@@ -1,3 +1,7 @@
+# Custom folders to ignore
+uploads/
+
+# Help and target files
 HELP.md
 target/
 !.mvn/wrapper/maven-wrapper.jar
