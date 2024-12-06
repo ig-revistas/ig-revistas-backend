@@ -1,22 +1,35 @@
 package ar.edu.unq.gurpo2.revistas.controller;
 
 import ar.edu.unq.gurpo2.revistas.service.CorreoService;
+import ar.edu.unq.gurpo2.revistas.service.UsuarioService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
+
+import java.util.UUID;
 
 @RestController
+@RequestMapping("/api/email")
 public class EmailController {
 
     @Autowired
     private CorreoService correoService;
 
-    @GetMapping("/send-email")
-    public String sendEmail(@RequestParam String to, @RequestParam String subject, @RequestParam String text) {
+    @Autowired
+    private UsuarioService usuarioService;
+
+    @PostMapping("/olvide-contrasenia")
+    public String enviarCorreoRecuperacion(@RequestParam String email) {
         try {
-        	correoService.sendEmail(to, subject, text);
-            return "Correo enviado con éxito a: " + to;
+            UUID token = UUID.randomUUID();
+            usuarioService.guardarTokenRecuperacion(email, token.toString());
+
+            String subject = "Restablecer contraseña";
+            String resetUrl = "http://localhost:3000/restablecer-contrasenia?token=" + token;
+            String text = "<p>Haz clic en el siguiente enlace para restablecer tu contraseña:</p>" +
+                          "<a href='" + resetUrl + "'>Restablecer Contraseña</a>";
+
+            correoService.sendEmail(email, subject, text);
+            return "Correo enviado para restablecer contraseña a: " + email;
         } catch (Exception e) {
             return "Error al enviar el correo: " + e.getMessage();
         }

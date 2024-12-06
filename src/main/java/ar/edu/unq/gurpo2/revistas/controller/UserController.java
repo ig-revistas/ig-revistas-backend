@@ -27,6 +27,7 @@ import ar.edu.unq.gurpo2.revistas.dto.UsuarioDto;
 import ar.edu.unq.gurpo2.revistas.model.Usuario;
 import ar.edu.unq.gurpo2.revistas.request.AuthRequest;
 import ar.edu.unq.gurpo2.revistas.security.UserInfoDetails;
+import ar.edu.unq.gurpo2.revistas.service.CorreoService;
 import ar.edu.unq.gurpo2.revistas.service.JwtService;
 import ar.edu.unq.gurpo2.revistas.service.UsuarioService;
 
@@ -39,6 +40,9 @@ public class UserController {
 
     @Autowired
     private JwtService jwtService;
+    
+    @Autowired
+    private CorreoService correoService;
 
     @Autowired
     private AuthenticationManager authenticationManager;
@@ -152,6 +156,31 @@ public class UserController {
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
                     .body("Error al actualizar la contraseña: " + e.getMessage());
+        }
+    }
+    @PostMapping("/solicitar-restablecimiento")
+    public ResponseEntity<?> solicitarRestablecimiento(@RequestBody Map<String, String> request) {
+        try {
+            String email = request.get("email");
+            if (email == null || email.isEmpty()) {
+                return ResponseEntity.badRequest().body("El email es requerido.");
+            }
+
+            Usuario usuario = usuarioService.buscarPorEmail(email);
+            if (usuario == null) {
+                return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Usuario no encontrado.");
+            }
+
+            String token = jwtService.generateToken(email); 
+            String enlaceRestablecimiento = "http://tu-app.com/restablecer-contrasenia?token=" + token;
+
+            correoService.sendEmail(email, "Restablecimiento de Contraseña",
+                    "Haz clic en el siguiente enlace para restablecer tu contraseña: " + enlaceRestablecimiento);
+
+            return ResponseEntity.ok("Correo de restablecimiento enviado.");
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                    .body("Error al procesar la solicitud: " + e.getMessage());
         }
     }
 }
