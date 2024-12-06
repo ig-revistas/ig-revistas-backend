@@ -6,6 +6,7 @@ import java.nio.file.Paths;
 import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value; 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -49,6 +50,9 @@ public class UserController {
 
     @Autowired
     private PasswordEncoder encoder;
+
+    @Value("${app.url}") 
+    private String appUrl; 
 
     private static final String UPLOAD_DIR = "./uploads/";
 
@@ -158,6 +162,7 @@ public class UserController {
                     .body("Error al actualizar la contraseña: " + e.getMessage());
         }
     }
+
     @PostMapping("/solicitar-restablecimiento")
     public ResponseEntity<?> solicitarRestablecimiento(@RequestBody Map<String, String> request) {
         try {
@@ -172,7 +177,7 @@ public class UserController {
             }
 
             String token = jwtService.generateToken(email); 
-            String enlaceRestablecimiento = "http://tu-app.com/restablecer-contrasenia?token=" + token;
+            String enlaceRestablecimiento = appUrl + "/restablecer-contrasenia?token=" + token;
 
             correoService.sendEmail(email, "Restablecimiento de Contraseña",
                     "Haz clic en el siguiente enlace para restablecer tu contraseña: " + enlaceRestablecimiento);

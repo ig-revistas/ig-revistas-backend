@@ -49,7 +49,10 @@ public class SecurityConfig {
                     "/login",
                     "/uploads/**",
                     "/revistas/uploads/**",
-                    "/usuario/{id}"
+                    "/usuario/{id}",
+                    "/solicitar-restablecimiento",
+                    "/restablecer-contrasenia/**"
+                    
                 ).permitAll()
                 .anyRequest().authenticated()
             )

@@ -1,15 +1,13 @@
--- Seleccionar la base de datos o crearla si es necesario
-CREATE DATABASE IF NOT EXISTS revistas;
 USE revistas;
 
--- Eliminar tablas existentes (en orden para evitar conflictos con claves foráneas)
+-- Eliminar las tablas existentes si ya existen
 DROP TABLE IF EXISTS Usuario_Rol;
 DROP TABLE IF EXISTS Reserva;
 DROP TABLE IF EXISTS usuario;
-DROP TABLE IF EXISTS Revista;
+DROP TABLE IF EXISTS revista;
 DROP TABLE IF EXISTS rol;
 
--- Crear tablas de nuevo
+-- Crear tablas con UUID como tipo de id
 
 -- Tabla de usuarios (UUID generado por Spring, solo almacenado aquí)
 CREATE TABLE usuario (
@@ -20,9 +18,9 @@ CREATE TABLE usuario (
     portada_url VARCHAR(255)  -- Nueva columna para la portada de usuario
 );
 
--- Tabla de revistas
-CREATE TABLE Revista (
-    id INT AUTO_INCREMENT PRIMARY KEY,
+-- Tabla de revistas con UUID como id
+CREATE TABLE revista (
+    id CHAR(36) PRIMARY KEY,  -- Cambiar a CHAR(36) para UUID
     titulo VARCHAR(100) NOT NULL,
     autor VARCHAR(100) NOT NULL,
     fecha_publicacion DATE,
@@ -31,13 +29,13 @@ CREATE TABLE Revista (
     estado ENUM('DISPONIBLE', 'PRESTADA', 'RESERVADA', 'DEVUELTA') NOT NULL,
     cantidad_disponible INT NOT NULL,
     descripcion TEXT,
-    portada_url VARCHAR(255)  -- Columna para la portada de revista
+    portada_url VARCHAR(255) 
 );
 
--- Tabla de reservas (relación muchos a muchos entre usuarios y revistas)
+-- Tabla de reservas con UUID
 CREATE TABLE Reserva (
     id INT AUTO_INCREMENT PRIMARY KEY,
-    id_revista INT,
+    id_revista Char(36),
     id_usuario CHAR(36),  
     tiempo_vigente INT,
     fecha_pedir_reserva DATE,
@@ -48,9 +46,10 @@ CREATE TABLE Reserva (
     FOREIGN KEY (id_usuario) REFERENCES usuario(id)
 );
 
+
 -- Tabla de roles
 CREATE TABLE rol (
-    id CHAR(36) PRIMARY KEY,
+    id CHAR(36) PRIMARY KEY,  -- Cambiar a CHAR(36) para UUID
     nombre VARCHAR(50) NOT NULL
 );
 
@@ -63,51 +62,37 @@ CREATE TABLE Usuario_Rol (
     FOREIGN KEY (id_rol) REFERENCES rol(id)
 );
 
--- Consultas para verificar las tablas
-SELECT * FROM Usuario_Rol;
-SELECT * FROM Revista;
+-- Consultas adicionales
+SELECT * FROM revistas.Usuario_Rol;
+
+-- Asignar rol de administrador al usuario con correo 'akopach05@gmail.com'
+-- solo es necesario cambiar el email si deseas otro usuario
+INSERT INTO revistas.Usuario_Rol (id_usuario, id_rol) 
+VALUES (
+    (SELECT id FROM revistas.usuario WHERE email = 'Akopach05@gmail.com'),
+    (SELECT id FROM revistas.rol WHERE nombre = 'OPERADOR_ROLE')
+);
+
+-- Consultar las revistas
+SELECT * FROM revistas.revista;
+SELECT * FROM revistas.usuario_rol ur;
+SELECT * FROM revistas.rol r;
 SELECT * FROM usuario;
-SELECT * FROM rol;
+select * from revistas.reserva r ;
 
--- Asignar rol de administrador al usuario específico (cambiar email si es necesario)
-INSERT INTO Usuario_Rol (id_usuario, id_rol) 
-VALUES (
-    (SELECT id FROM usuario WHERE email = 'eze@gmail.com'),
-    (SELECT id FROM rol WHERE nombre = 'ADMIN_ROLE')
-);
+UPDATE  revistas.rol SET nombre = 'hola';
 
--- Asignar rol de operador al usuario específico (cambiar email si es necesario)
-INSERT INTO Usuario_Rol (id_usuario, id_rol) 
-VALUES (
-    (SELECT id FROM usuario WHERE email = 'eze@gmail.com'),
-    (SELECT id FROM rol WHERE nombre = 'OPERADOR_ROLE')
-);
+INSERT INTO revistas.rol(id, nombre) VALUES (UUID(),'OPERADOR_ROLE');
 
--- Insertar roles si no existen
-INSERT INTO rol (id, nombre) VALUES (UUID(), 'ADMIN_ROLE') ON DUPLICATE KEY UPDATE nombre = nombre;
-INSERT INTO rol (id, nombre) VALUES (UUID(), 'USER_ROLE') ON DUPLICATE KEY UPDATE nombre = nombre;
-INSERT INTO rol (id, nombre) VALUES (UUID(), 'OPERADOR_ROLE') ON DUPLICATE KEY UPDATE nombre = nombre;
-
--- Actualizar el nombre de un rol
-UPDATE rol SET nombre = 'hola';
-
--- Eliminar todas las filas de Revista (si es necesario)
-DELETE FROM Revista;
-
--- Eliminar el rol específico (si es necesario)
-DELETE FROM rol WHERE id = '041de785-9d60-11ef-9b54-3464a90578e7';
-
--- Agregar columna para portadas si no existe (en caso de que ya esté creada)
-ALTER TABLE Revista 
-ADD COLUMN IF NOT EXISTS portada_url VARCHAR(255);
-
--- Agregar columna de portada en la tabla usuario si no existe
+-- Agregar la columna para la portada de usuario si no existe
 ALTER TABLE usuario 
-ADD COLUMN IF NOT EXISTS portada_url VARCHAR(255);
+ADD COLUMN portada_url VARCHAR(255);
 
--- Agregar columna de tiempo_vigente en la tabla Reserva si no existe
-ALTER TABLE Reserva 
-ADD COLUMN IF NOT EXISTS tiempo_vigente INT;
+-- Agregar la columna de portada en la tabla revista si no existe
+ALTER TABLE revista 
+ADD COLUMN portada_url VARCHAR(255);
+ALTER TABLE reserva ADD COLUMN estado VARCHAR(255);
 
--- Eliminar una reserva específica (si es necesario)
-DELETE FROM Reserva WHERE id = 4;
+
+ALTER TABLE usuario 
+ADD COLUMN token_recuperacion VARCHAR(255);
