@@ -49,7 +49,10 @@ public class SecurityConfig {
                     "/login",
                     "/uploads/**",
                     "/revistas/uploads/**",
-                    "/usuario/{id}"
+                    "/usuario/{id}",
+                    "/solicitar-restablecimiento",
+                    "/restablecer-contrasenia/**"
+                    
                 ).permitAll()
                 .anyRequest().authenticated()
             )
@@ -61,19 +64,19 @@ public class SecurityConfig {
 		return http.build();
 	}
 
-	@Bean
-	public CorsConfigurationSource corsConfigurationSource() {
-		CorsConfiguration configuration = new CorsConfiguration();
-		configuration.setAllowCredentials(true);
-		configuration.addAllowedOrigin("http://localhost:5173");
-		configuration.addAllowedMethod("*");
-		configuration.addAllowedHeader("*");
-		configuration.addExposedHeader("Authorization");
+    @Bean
+    public CorsConfigurationSource corsConfigurationSource() {
+        CorsConfiguration configuration = new CorsConfiguration();
+        configuration.setAllowCredentials(true);
+        configuration.addAllowedOrigin("http://localhost:5173");  
+        configuration.addAllowedMethod("*"); 
+        configuration.addAllowedHeader("*");  
+        configuration.addExposedHeader("Authorization");  
 
-		UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
-		source.registerCorsConfiguration("/**", configuration);
-		return source;
-	}
+        UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
+        source.registerCorsConfiguration("/**", configuration);  
+        return source;
+    }
 
 	@Bean
 	public PasswordEncoder passwordEncoder() {

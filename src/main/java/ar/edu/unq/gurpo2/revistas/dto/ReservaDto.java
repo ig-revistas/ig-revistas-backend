@@ -29,7 +29,7 @@ public class ReservaDto implements Serializable {
     private String mailUsuario;
     private String tituloRevista;
     private Estado estadoRevista;
-
+   
 
     public ReservaDto() {}
 
@@ -47,11 +47,12 @@ public class ReservaDto implements Serializable {
         this.mailUsuario = reserva.getUsuario().getEmail();
         this.tituloRevista = reserva.getRevista().getTitulo();
         this.estadoRevista = reserva.getRevista().getEstado();
-        this.setPortadaRevista(reserva.getRevista().getPortadaUrl());
+        this.portadaRevista=reserva.getRevista().getPortadaUrl();
+
     }
 
-    
-    public String getMailUsuario() {
+
+	public String getMailUsuario() {
 		return mailUsuario;
 	}
 
