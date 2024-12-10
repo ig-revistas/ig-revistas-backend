@@ -64,6 +64,12 @@ public class RevistaService {
 
         return revistaRepository.save(revista);
     }
+
+
+	public long getCantidadDeRevistas() {
+		
+		return this.revistaRepository.count();
+	}
     
 }
 
