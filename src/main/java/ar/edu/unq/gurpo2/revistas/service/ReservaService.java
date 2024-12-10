@@ -15,7 +15,6 @@ import ar.edu.unq.gurpo2.revistas.model.Estado;
 import ar.edu.unq.gurpo2.revistas.model.EstadoReserva;
 import ar.edu.unq.gurpo2.revistas.model.Reserva;
 import ar.edu.unq.gurpo2.revistas.model.Revista;
-import ar.edu.unq.gurpo2.revistas.model.Usuario;
 import ar.edu.unq.gurpo2.revistas.repository.ReservaRepository;
 import ar.edu.unq.gurpo2.revistas.repository.RevistaRepository;
 import jakarta.transaction.Transactional;
@@ -82,6 +81,33 @@ public class ReservaService {
 	@Transactional
 	public List<Reserva> getAllReservaPendiente() {
 		return  this.reservaRepository.findReservasWithRevistaAndUsuarioByEstado(EstadoReserva.PENDIENTE);
+	}
+	
+	@Transactional
+	public List<Reserva> getAllReservaAprobada() {
+		return  this.reservaRepository.findReservasWithRevistaAndUsuarioByEstado(EstadoReserva.APROBADA);
+	}
+	
+	@Transactional
+	public String devolverReserva(String reservaId) {
+	    Reserva reserva = reservaRepository.findById(reservaId)
+	            .orElseThrow(() -> new RuntimeException("Reserva no encontrada"));
+
+	    if (!EstadoReserva.APROBADA.equals(reserva.getEstado())) {
+	        return "La reserva no está aprobada.";
+	    }
+	    reserva.setEstado(EstadoReserva.DEVUELTA); 
+	    reservaRepository.save(reserva);
+	    Revista revista = reserva.getRevista();
+	    int nuevasCopiasDisponibles = revista.getCantidadDisponible() + 1;
+	    revista.setCantidadDisponible(nuevasCopiasDisponibles);
+	    if (Estado.AGOTADA.equals(revista.getEstado()) && nuevasCopiasDisponibles > 0) {
+	        revista.setEstado(Estado.DISPONIBLE);
+	    }
+
+	    revistaRepository.save(revista);
+
+	    return "Reserva devuelta con éxito. La revista ahora tiene " + nuevasCopiasDisponibles + " copias disponibles.";
 	}
 	
 	@Transactional

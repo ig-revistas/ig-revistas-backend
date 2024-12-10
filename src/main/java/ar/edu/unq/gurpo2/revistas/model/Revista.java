@@ -122,5 +122,6 @@ public class Revista {
 	public void tomarUnaRevista() {
 		this.cantidadDisponible--;
 	}
+
 }
 

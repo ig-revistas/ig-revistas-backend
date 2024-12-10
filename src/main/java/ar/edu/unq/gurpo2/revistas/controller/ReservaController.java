@@ -136,6 +136,12 @@ public class ReservaController {
         return this.mapearAReservaDto(reservas);
     }
     
+    @PreAuthorize("hasAuthority('OPERADOR_ROLE')")
+    @GetMapping("/aprobadas")
+    public List<ReservaDto> obtenerReservasAprobadas() {
+        List<Reserva> reservas = reservaService.getAllReservaAprobada();
+        return this.mapearAReservaDto(reservas);
+    }
 
     @GetMapping("/usuario/{id}")
     public ResponseEntity<List<ReservaDto>> obtenerReserva(@PathVariable String id) {
@@ -145,6 +151,17 @@ public class ReservaController {
     private List<ReservaDto> mapearAReservaDto(List<Reserva> reservas){
     	return reservas.stream().map(reserva -> new ReservaDto(reserva)).collect(Collectors.toList());
         
+    }
+    
+    @PreAuthorize("hasAuthority('OPERADOR_ROLE')")
+    @PutMapping("/devolver/{id}")
+    public ResponseEntity<String> devolverReserva(@PathVariable String id) {
+        try {
+            reservaService.devolverReserva(id);
+            return ResponseEntity.ok("Reserva devuelta con éxito");
+        } catch (RuntimeException e) {
+            return ResponseEntity.badRequest().body(e.getMessage());
+        }
     }
 
 
