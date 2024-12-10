@@ -117,6 +117,11 @@ public class ReservaService {
 	
 		return mensajeReserva;
 	}
+	public long getCantidadDeReservas() {
+	
+		return this.reservaRepository.count();
+	}
+	
 	
 }
 

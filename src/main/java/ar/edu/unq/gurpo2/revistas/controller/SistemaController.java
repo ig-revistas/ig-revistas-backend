@@ -18,10 +18,9 @@ public class SistemaController {
 	@Autowired
 	private SistemaService sistemaService;
 
-//	@Autowired
-//	private LamadridService lamadridService;
+
 	
-	@PreAuthorize("hasAuthority('OPERADOR_ROLE')")
+	
     @GetMapping("/reporte")
     private ResponseEntity<?> reporteTotales() {
 		
@@ -30,7 +29,7 @@ public class SistemaController {
     	 ReporteDto reporte= this.sistemaService.getReporteSistema();
     	 
 	 	return ResponseEntity.status(HttpStatus.OK).body(reporte);
-//	 	return ResponseEntity.status(HttpStatus.OK).body("LAMADRID");
+
 		}catch (Exception e) {
 			e.printStackTrace();
 			return  ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Error al generar el reporte: " + e.getMessage());
