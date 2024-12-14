@@ -137,7 +137,7 @@ public class ReservaController {
     }
     
     @PreAuthorize("hasAuthority('OPERADOR_ROLE')")
-    @GetMapping("/aprobadas")
+    @GetMapping("/todasLasAprobadas")
     public List<ReservaDto> obtenerReservasAprobadas() {
         List<Reserva> reservas = reservaService.getAllReservaAprobada();
         return this.mapearAReservaDto(reservas);

@@ -43,6 +43,4 @@ public interface ReservaRepository extends JpaRepository<Reserva, String> {
 		List<Object[]> obtenerReservasYDevolucionesPorRevista(@Param("estadoReservada") EstadoReserva estadoReservada, 
 		                                                      @Param("estadoDevuelta") EstadoReserva estadoDevuelta);
 
-
-
 }
